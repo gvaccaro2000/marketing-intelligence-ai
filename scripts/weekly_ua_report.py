@@ -312,6 +312,7 @@ def analyse_entity(dim: str, key: str, s: list[dict]) -> dict:
                       and now["roas7"] is not None and now["roas7"] < rest["roas7"])
     extra_wk = (now["share"] - (a["share_before"] or 0)) * now["total_spend"] / len(recent)
     a["drift_usd"] = (rest["roas7"] - now["roas7"]) * extra_wk if a["drift"] else 0.0
+    a["drift_extra_wk"] = extra_wk if a["drift"] else 0.0
 
     a["impact_usd"] = max(a["gap_usd"], a["step_usd"], a["drift_usd"])
     a["flagged"] = a["impact_usd"] >= MIN_IMPACT_USD
@@ -330,7 +331,8 @@ def structural_action(a: dict) -> dict:
             f"{pct1(st['after']['roas7'])}, CPI ${st['before']['cpi']:.2f} → ${st['after']['cpi']:.2f}) "
             f"with the partner/MMP: getting back to its prior level is worth ~{money(a['step_usd'])}/wk "
             f"of D7 revenue. If it isn't explained within a week, cut {name} by {STRUCT_SHIFT:.0%} "
-            f"(~{money(now['spend_wk'] * STRUCT_SHIFT)}/wk).")})
+            f"(~{money(now['spend_wk'] * STRUCT_SHIFT)}/wk)."),
+            "moves": {name: -now["spend_wk"] * STRUCT_SHIFT}, "rebalance": False})
         # a persistent gap that started with the step is the same problem: fix the cause first
         cands[-1]["usd"] = max(cands[-1]["usd"], a["gap_usd"])
     if a["persistent"]:
@@ -343,15 +345,17 @@ def structural_action(a: dict) -> dict:
         cands.append({"usd": usd, "text": (
             f"Move {STRUCT_SHIFT:.0%} of {name} spend (~{money(amt)}/wk) into the rest of paid "
             f"(D7 ROAS {pct1(rest['roas7'])} vs {pct1(now['roas7'])}): ~+{money(usd)}/wk of D7 "
-            f"revenue at average returns.{d30}")})
+            f"revenue at average returns.{d30}"),
+            "moves": {name: -amt}, "rebalance": True})
     if a["drift"]:
         cands.append({"usd": a["drift_usd"], "text": (
             f"Cap {name} at its earlier {pct1(a['share_before'], 0)} budget share (now "
             f"{pct1(now['share'], 0)}) and return the difference to the rest of paid: "
-            f"~+{money(a['drift_usd'])}/wk of D7 revenue.")})
+            f"~+{money(a['drift_usd'])}/wk of D7 revenue."),
+            "moves": {name: -a["drift_extra_wk"]}, "rebalance": True})
     best = max(cands, key=lambda c: c["usd"])
     return {**best, "at_stake_usd": a["impact_usd"], "source": "structural", "entity": name,
-            "dim": a["dim"], "key": a["key"]}
+            "dim": a["dim"], "key": a["key"], "mode": a["dim"]}
 
 
 def structural_issues(rows: list[dict]) -> dict:
@@ -481,12 +485,14 @@ def wow_action(wow: dict) -> dict | None:
                 f"({scale['roas_d7_cur'] * 100:.1f}%, blended {blended * 100:.1f}%): "
                 f"~+{money(usd)}/wk of D7 revenue.")
         keys = [trim["key"], scale["key"]]
+        moves, rebalance = {trim["key"]: -amt, scale["key"]: amt}, False
     elif trim:
         amt = trim["spend_cur"] * SHIFT_SHARE
         usd = amt * (blended - trim["roas_d7_cur"])
         text = (f"Trim {trim['key']} by ~{money(amt)}/wk: D7 ROAS {trim['roas_d7_cur'] * 100:.1f}% "
                 f"vs {blended * 100:.1f}% blended (~+{money(usd)}/wk of D7 revenue if redeployed).")
         keys = [trim["key"]]
+        moves, rebalance = {trim["key"]: -amt}, False
     elif scale:
         amt = scale["spend_cur"] * SHIFT_SHARE
         usd = amt * (scale["roas_d7_cur"] - blended)
@@ -494,9 +500,11 @@ def wow_action(wow: dict) -> dict | None:
                 f"{scale['roas_d7_cur'] * 100:.1f}% vs {blended * 100:.1f}% blended and improving, "
                 f"CPI {fpct(scale['cpi_pct'])} (~+{money(usd)}/wk of D7 revenue).")
         keys = [scale["key"]]
+        moves, rebalance = {scale["key"]: amt}, False
     else:
         return None
-    return {"usd": usd, "at_stake_usd": usd, "text": text, "source": "wow", "keys": keys}
+    return {"usd": usd, "at_stake_usd": usd, "text": text, "source": "wow", "keys": keys,
+            "mode": "channel", "moves": moves, "rebalance": rebalance}
 
 
 def candidate_actions(wow: dict, struct: dict) -> list[dict]:
@@ -526,6 +534,16 @@ def pick_action(cands: list[dict], wow: dict, checks, warnings) -> str:
         ch = sorted({w["channel"] for w in warnings if w["channel"] in names and w["country"] == "all"})
         caveat = f" Also confirm the {'/'.join(ch)} day-level outlier(s) on {', '.join(flagged)} with the MMP."
     return top["text"] + caveat
+
+
+def action_preset(cands: list[dict], checks) -> dict | None:
+    """Machine-readable form of the recommended action for the budget simulator
+    (scripts/build_simulator.py): {mode, moves: {line: USD/wk}, rebalance, text}. None = hold."""
+    if not cands or any(not c[1] for c in checks):
+        return None
+    top = cands[0]
+    return {"mode": top["mode"], "moves": top["moves"], "rebalance": top["rebalance"],
+            "text": top["text"], "source": top["source"]}
 
 
 def headline(wow: dict, organic) -> str:
@@ -842,6 +860,7 @@ def main() -> int:
         "drivers": [{k: v for k, v in d.items() if k != "e"} for d in drivers],
         "action": action,
         "candidate_actions": cands,
+        "preset": action_preset(cands, checks),
         "structural": {
             "weeks": struct["weeks"],
             "windows": struct_windows(week_start, struct, wow) if not struct["skipped"] else None,

@@ -69,6 +69,8 @@ Follow `CLAUDE.md`: never read `scripts/generate_data.py` or `answers/`, and ope
      earlier share), plus the WoW rule below. Candidates are ranked by the **weekly D7 revenue at
      stake** in the problem they fix; Slack shows the top one, the `.md` lists all. $ assume average
      returns on redeployed budget, so they are directional. Any failed check → hold.
+     The `.json` `preset` field holds the recommended action as `{mode, moves, rebalance}` for the
+     budget simulator (step 7); `null` on hold.
    - **WoW rule** (one candidate): channel > 10% below blended D7 ROAS → trim 10%; channel > 5%
      above, ROAS not falling, CPI not up > 5% → scale; both → shift. Outliers on the action's
      channel add a "confirm with the MMP" caveat.
@@ -124,6 +126,27 @@ Follow `CLAUDE.md`: never read `scripts/generate_data.py` or `answers/`, and ope
      **Exit 1 = a check failed and nothing was written.** Tell the user which check failed.
      Add the export's check result to your reply.
 
+7. **Build the budget simulator** (after step 6):
+
+   ```bash
+   python scripts/build_simulator.py
+   ```
+
+   It fills the `DATA` and `PRESET` blocks of the template `artifacts/budget_simulator.html` and
+   writes `reports/budget_simulator.html` (git-ignored).
+   - `DATA` (baseline): average of the **last 4 complete weeks** per channel and per country from
+     `reports/dashboard/weekly_{channel,country}.csv`: weekly spend, weekly installs, and D7 ROAS =
+     Σ D7 revenue / Σ D7-mature spend over those weeks. The page's window label is updated too.
+   - `PRESET`: the `preset` field of `reports/weekly_ua_<latest week>.json`, the recommended action
+     in machine-readable form (`mode` channel/country, `moves` USD/wk per line, `rebalance` = spread
+     freed budget over the other lines). If the report holds budgets (failed check or no candidate),
+     `preset` is `null` and the page's "Apply this week's recommendation" button is disabled.
+   - Checks before writing: 4 consecutive complete weeks, every line present in each week, lines
+     sum to the weekly totals, the report is for the latest exported week (so step 1 must run without
+     `--week`, or pass `--report`), and preset lines exist in the baseline. **Exit 1 = a check failed
+     and nothing was written; exit 2 = an input file is missing** (run steps 1 and 6 first).
+   - Edit the page layout in the template, not in `reports/`, and keep its `BEGIN/END` markers.
+
 ## Date windows (state them in every report)
 
 - Spend, installs, CPI, CTR, IPM: activity dates of the week vs the previous week (paid only).
@@ -141,5 +164,7 @@ Follow `CLAUDE.md`: never read `scripts/generate_data.py` or `answers/`, and ope
 |---|---|
 | `scripts/weekly_ua_report.py` | Runs SQL, validates, computes WoW, writes report + Slack draft, optional `--post` |
 | `scripts/export_dashboard_data.py` | Validates and writes weekly dashboard CSVs to `reports/dashboard/` (step 6) |
+| `scripts/build_simulator.py` | Fills the budget simulator template with the 4-week baseline and the report's preset (step 7) |
+| `artifacts/budget_simulator.html` | Budget simulator template (`DATA` / `PRESET` blocks between `BEGIN/END` markers) |
 | `scripts/post_to_slack.py` | Posts a mrkdwn file to `$SLACK_WEBHOOK_URL` (`--dry-run` prints the payload) |
 | `sql/weekly_ua/*.sql` | Vetted queries (`$week_start`, `$as_of` parameters) |
