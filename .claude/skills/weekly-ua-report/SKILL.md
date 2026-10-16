@@ -94,6 +94,36 @@ Follow `CLAUDE.md`: never read `scripts/generate_data.py` or `answers/`, and ope
 5. **Reply to the user** with the headline, the posted status, the validation result
    (`N/N checks passed`, outlier count) and the date windows (below).
 
+6. **Export dashboard data** (final step, every run):
+
+   ```bash
+   python scripts/export_dashboard_data.py
+   ```
+
+   It writes CSVs to `reports/dashboard/` (git-ignored) from `sql/weekly_ua/dashboard_weekly.sql`.
+   It always covers **every complete Mon–Sun week** in the data, and the latest complete week, even
+   if step 1 used `--week` for an earlier one.
+
+   | File | Columns |
+   |---|---|
+   | `weekly_total.csv` | `week_start, spend, installs, cpi, d7_revenue, d7_mature_spend, roas_d7, organic_installs` |
+   | `weekly_channel.csv` | `week_start, channel` + the same metrics, paid channels only (no `organic_installs`) |
+   | `weekly_country.csv` | `week_start, country` + the same metrics, incl. that country's `organic_installs` |
+   | `latest_channel.csv` | `channel, spend, installs, cpi, roas_d7, spend_share, spend_wow, cpi_wow, roas_d7_wow_pp` |
+   | `latest_country.csv` | the same by `country` |
+
+   - Spend, installs, CPI: paid only (`channel <> 'Organic'`), activity dates of the week.
+   - `d7_revenue`, `d7_mature_spend`, `roas_d7`: D7-mature cohorts only (install date ≤ `as_of − 7`),
+     in numerator and denominator. In the latest week that's 6 of 7 install days, so
+     `d7_mature_spend` < `spend` there.
+   - `spend_share` = share of the week's paid spend; `spend_wow`, `cpi_wow` = change vs the previous
+     week as fractions (0.05 = +5%); `roas_d7_wow_pp` = change in D7 ROAS in percentage points.
+   - Before writing it checks: complete consecutive weeks, `ua_spend` → cohort grain equals
+     `cohorts.installs` row for row, the cohort join keeps paid spend and installs (no fan-out),
+     channel and country rows sum to each weekly total, and D7 maturity. It prints `N/N passed`.
+     **Exit 1 = a check failed and nothing was written.** Tell the user which check failed.
+     Add the export's check result to your reply.
+
 ## Date windows (state them in every report)
 
 - Spend, installs, CPI, CTR, IPM: activity dates of the week vs the previous week (paid only).
@@ -110,5 +140,6 @@ Follow `CLAUDE.md`: never read `scripts/generate_data.py` or `answers/`, and ope
 | Path | Role |
 |---|---|
 | `scripts/weekly_ua_report.py` | Runs SQL, validates, computes WoW, writes report + Slack draft, optional `--post` |
+| `scripts/export_dashboard_data.py` | Validates and writes weekly dashboard CSVs to `reports/dashboard/` (step 6) |
 | `scripts/post_to_slack.py` | Posts a mrkdwn file to `$SLACK_WEBHOOK_URL` (`--dry-run` prints the payload) |
 | `sql/weekly_ua/*.sql` | Vetted queries (`$week_start`, `$as_of` parameters) |

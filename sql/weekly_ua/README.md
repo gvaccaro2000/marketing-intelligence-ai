@@ -4,7 +4,7 @@ Vetted queries used by `scripts/weekly_ua_report.py` (skill: `.claude/skills/wee
 All follow `CLAUDE.md`: `NULLIF` on every division, ratios from summed components,
 Organic excluded from paid metrics, immature cohorts dropped from numerator and denominator.
 
-Every query takes two named parameters (DuckDB `$name` syntax):
+Every report query takes two named parameters (DuckDB `$name` syntax):
 
 | Param | Meaning |
 |---|---|
@@ -24,3 +24,5 @@ so the script can check that breakdown rows sum to the total.
 | `check_reconcile.sql` | `ua_spend` → cohort grain vs `cohorts`: rows, installs, spend through the join |
 | `check_nulls.sql` | Unexpected NULLs / maturity violations / impossible values |
 | `check_outliers.sql` | Channel-day spend, installs, CPI vs trailing-28-day baseline (robust z-score) |
+| `dashboard_weekly.sql` | All complete weeks: paid spend, installs, CPI, D7-mature revenue + spend, D7 ROAS, Organic installs by total / channel / country (`scripts/export_dashboard_data.py`; no parameters) |
+| `dashboard_checks.sql` | Dashboard export checks over all complete weeks: cohort-grain reconciliation and D7 maturity (`$as_of` only) |
