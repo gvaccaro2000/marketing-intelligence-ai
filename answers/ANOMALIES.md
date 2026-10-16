@@ -3,89 +3,93 @@
 > Spoiler file. Analysts should try to find these in `data/marketing.duckdb`
 > before reading this file.
 
-Data window: **2026-06-01 → 2026-08-29** (90 days), generated with `--seed 42`.
+Data window: **2026-06-01 → 2026-08-29** (90 days), generated with `--seed 20260916`.
 Figures below come from the default seed. Other seeds change the noise but not the patterns.
 
 ---
 
-## 1. Creative fatigue: `TT-UGC-02` (TikTok, campaign `tiktok_spark_ugc`)
+## 1. Attribution outage: Google Android, 2026-08-06 → 2026-08-09
 
-**What:** TikTok's best creative starts losing CTR on **2026-07-03**. CTR decays
-exponentially (half-life about 2 weeks) to roughly 45% of its starting level. The
-budget never moves off it. Its spend keeps growing with the channel, so it still takes
-about 60% of the campaign budget.
+**What:** For four days, Google stops reporting almost all Android installs. Spend,
+impressions and clicks stay normal, so the campaigns are still delivering. Only about
+6% of installs are attributed. The missing installs show up as **Organic Android**
+installs instead, which roughly double on exactly the same days. Google iOS is
+unaffected.
 
-| Period | CTR | CPI | Spend |
+| Google Android | Spend/day | Clicks/day | Installs/day | CPI |
+|---|---|---|---|---|
+| Jul 23 – Aug 23, excl. outage | ~$5.9k | ~21k | 4,582 | $1.29 |
+| Aug 06 – Aug 09 (outage) | ~$6.2k | ~22k | **280** | **$22.16** |
+
+Organic Android: about 4.1k installs/day before and after, **8.2k–9.3k/day** during the
+outage (35,188 installs over the four days). Total Android installs barely move.
+
+**How to find it:** plot daily installs and CPI by channel × platform. Google Android CPI
+spikes about 17× for four days while clicks are flat, so click→install CVR collapses.
+Put Organic installs for the same platform next to it. The mirror-image spike shows the
+installs happened but lost attribution (SDK, postback or MMP issue), not that demand fell.
+
+**Recommended action:** don't pause or cut Google on the basis of those four days. Raise
+it with the MMP / Google measurement team, check SDK and postback health, and if
+possible restate the affected days. Exclude the window from CPI and ROAS trend reads,
+and add an alert on paid CVR drops alongside organic spikes.
+
+## 2. Android retention regression from 2026-07-21 install cohorts
+
+**What:** Every Android cohort installed on or after **2026-07-21** retains worse.
+D1 drops about 18%, D7 about 32% and D30 about 38%. It hits every channel and
+Organic alike. iOS cohorts are unchanged. CPI, CTR and installs do not move, so it
+is not a traffic-quality problem. It points to a product change (an Android app
+release) on that date. Android DAU in `daily_kpis` also falls faster than iOS
+afterwards.
+
+Android cohorts (excluding `unity_video_retarget`, see #3):
+
+| Install cohorts | D1 | D7 | D30 |
 |---|---|---|---|
-| Jun 01 – Jul 02 | 1.39% | $0.73 | $68k |
-| Jul 03 – Aug 29 | 0.84% | $1.10 | $134k |
+| Before Jul 21 | 36.2% | 14.0% | 5.2% |
+| From Jul 21 (mature only) | 29.9% | 9.7% | 3.4% |
+| iOS before / after | 39.9% / 40.1% | 15.5% / 15.5% | 5.8% / 5.8% |
 
-Daily snapshots: CTR 1.43% / CPI $0.69 (Jun 15) → 1.00% / $0.96 (Jul 16) →
-0.64% / $1.45 (Aug 29). The sibling creatives `TT-UGC-01` and `TT-UGC-03` stay flat
-at about 0.9–0.96% CTR. That rules out a channel-wide or seasonal cause.
+The drop is about the same within each channel (e.g. Meta Android D1 36.2% → 29.6%,
+AppLovin 37.8% → 31.4%, Organic 41.5% → 34.0%).
 
-**How to find it:** compute CTR and CPI by `creative_id` and week. Look for a creative
-whose CTR trends down while its spend share stays high.
+**How to find it:** compute D1/D7 retention by `install_date` (or install week) ×
+platform, mature cohorts only. A step change on one platform across all channels,
+including Organic, rules out UA as the cause.
 
-**Recommended action:** refresh the creative or start iterating on new concepts.
-Cap `TT-UGC-02` spend or move budget to the other creatives. Watch CTR decay as a
-leading indicator.
+**Recommended action:** escalate to the product/engineering team. Check the Android
+release history around 2026-07-20/21 (crashes, load time, tutorial or economy changes)
+and consider a rollback or hotfix. Expect Android ROAS to soften as D7/D30 mature, and
+don't blame the networks for it.
 
-## 2. Channel CPI jump: AppLovin from 2026-07-17
+## 3. Invalid traffic (click spam): `unity_video_retarget` from 2026-07-09
 
-**What:** AppLovin CPM steps up about 70% over three days starting **2026-07-17**
-(day 47). CTR and CVR do not change. Daily spend stays flat, so the higher price
-shows up directly as fewer installs.
+**What:** From **2026-07-09** (ramping up over five days), the Unity campaign
+`unity_video_retarget` starts getting a flood of fake installs on top of its real ones.
+Spend per day is unchanged, but installs more than double, so CPI looks about 56%
+cheaper. The extra installs come with a huge burst of clicks, so CTR roughly
+quintuples and click→install CVR halves. The extra users almost never come back and
+never pay. Blended D1 retention and payer conversion collapse. Revenue doesn't change,
+so D7 ROAS stays flat: the campaign's apparent "efficiency" is fake.
 
-| Period | CPI | CPM | CTR | Spend/day | Installs/day |
-|---|---|---|---|---|---|
-| Before Jul 17 | $1.23 | $8.45 | 1.81% | $10.9k | 8,885 |
-| From Jul 17 | $1.88 | $12.93 | 1.81% | $11.3k | 6,012 |
+| `unity_video_retarget` | Spend/day | Installs/day | CPI | CTR | CVR | D1 | D7 payer conv. |
+|---|---|---|---|---|---|---|---|
+| Jun 01 – Jul 08 | $2.56k | 2,228 | $1.15 | 1.60% | 34.2% | 34.3% | 1.73% |
+| Jul 13 – Aug 29 (full ramp) | $2.77k | 5,482 | **$0.50** | **8.01%** | **15.7%** | **14.6%** | **0.76%** |
 
-That is about +53% CPI and about −32% installs for the same budget. AppLovin goes
-from the cheapest major paid channel to the most expensive one. No other channel shifts
-on that date.
+The sister campaign `unity_playable_installs` stays flat on every metric (CPI ~$1.16,
+CTR 1.6%, D1 ~34%; the small D1 dip comes from #2).
 
-**How to find it:** plot daily CPI by channel and look for a step change. Then break
-CPI into CPM × (1 / CTR) × (1 / CVR). Only CPM moved, which points to an auction or
-pricing change, not a creative or funnel problem.
+**How to find it:** compare campaigns' CTR, CVR, CPI and D1 retention week by week.
+A sudden jump in CTR with a fall in CVR and D1, on unchanged spend, is the classic
+click-spam / install-fraud signature. Cohort-quality metrics (D1, payer conversion)
+fall while ROAS stays flat because the fake installs add no revenue.
 
-**Recommended action:** review AppLovin bids and targets. Check whether a bid or
-target change, an inventory change or competitor pressure explains it. Reallocate
-budget until CPI recovers.
-
-## 3. Country with great installs but terrible ROAS: Brazil (BR)
-
-**What:** BR delivers by far the most installs at the lowest CPI. Its D1 retention is
-only slightly below other markets. But almost nobody pays, so D7 ROAS is about 1/6
-of every other country. The budget share for BR also **grows** over the period
-(June 21.7% → July 24.9% → August 28.5% of spend), as if the team kept chasing cheap
-installs.
-
-Paid traffic only:
-
-| Country | Spend | Installs | CPI | D1 ret | D7 payer % | D7 ROAS |
-|---|---|---|---|---|---|---|
-| US | $1.63M | 637k | $2.55 | 38.5% | 3.09% | 20.3% |
-| **BR** | **$1.21M** | **2.33M** | **$0.52** | 34.7% | **0.20%** | **3.3%** |
-| JP | $0.63M | 213k | $2.98 | 41.7% | 3.54% | 21.3% |
-| DE | $0.45M | 202k | $2.23 | 39.2% | 2.86% | 18.8% |
-| UK | $0.45M | 222k | $2.03 | 37.9% | 2.70% | 19.4% |
-| FR | $0.45M | 242k | $1.86 | 37.5% | 2.50% | 18.3% |
-
-BR is about half of all installs and about 25% of spend, but it returns only about
-3 cents per dollar by D7, versus 18–21 cents elsewhere. The pattern holds on every
-channel and on organic traffic too. So the problem is the market and its monetization,
-not a single network. The payer rate is about 1/6 of normal, and ARPPU and ad
-revenue per install are also depressed.
-
-**How to find it:** join `cohorts` to `ua_spend` (aggregated to campaign × country ×
-platform × day). Compute D7 ROAS and D7 payer conversion by country. Use only
-matured cohorts, where `revenue_d7` is not NULL. Then compare that with installs and
-CPI.
-
-**Recommended action:** cut or cap BR spend. Switch BR to ROAS- or value-optimized
-bidding. Test regional pricing or an ad-monetization-heavy setup before scaling again.
+**Recommended action:** flag the campaign with Unity and the MMP's fraud tooling.
+Ask for refunds or makegoods on the invalid installs, and check sub-publisher / source
+app IDs to blocklist the offenders. Exclude the campaign's installs from install-volume
+KPIs and CPI benchmarks until it's clean.
 
 ---
 
@@ -96,4 +100,6 @@ bidding. Test regional pricing or an ad-monetization-heavy setup before scaling 
 - `Organic` rows in `ua_spend` have zero spend, impressions and clicks. They only
   carry installs.
 - Normal patterns: weekend uplift, a mild upward spend trend, iOS has higher CPI and
-  higher monetization than Android, and JP has the best retention and payer rate.
+  higher monetization than Android, JP has the best retention and payer rate, and BR
+  is a cheap, low-monetizing market (by design, with a stable budget share).
+- Game-wide DAU slowly declines on both platforms because the legacy user base churns.
