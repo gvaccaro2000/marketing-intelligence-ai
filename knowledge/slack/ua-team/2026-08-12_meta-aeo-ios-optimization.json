@@ -1,0 +1,28 @@
+{
+  "id": "ua-team_2026-08-12_meta-aeo-ios-optimization",
+  "channel": "#ua-team",
+  "author": "Priya Raman",
+  "timestamp": "2026-08-12T12:30:00Z",
+  "messages": [
+    {
+      "author": "Priya Raman",
+      "role": "UA Manager (Meta, TikTok)",
+      "timestamp": "2026-08-12T12:30:00Z",
+      "text": "FYI meta_aeo_purchase_t1 on iOS is optimising better since we moved the purchase event into the first conversion window. D0 revenue per install on iOS Meta is up slightly week over week. Nothing dramatic, just a heads-up in case the weekly numbers move."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-08-12T12:44:00Z",
+      "text": "Noted. Reminder that iOS cohorts from the last 7 days won't have D7 revenue yet, so the D7 ROAS impact shows up next week at the earliest."
+    },
+    {
+      "author": "Priya Raman",
+      "role": "UA Manager (Meta, TikTok)",
+      "timestamp": "2026-08-12T12:46:00Z",
+      "text": ":+1:"
+    }
+  ]
+}

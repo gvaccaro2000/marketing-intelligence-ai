@@ -1,0 +1,28 @@
+{
+  "id": "marketing-leads_2026-06-26_q3-budget-plan-approval",
+  "channel": "#marketing-leads",
+  "author": "Tomasz Wierzbicki",
+  "timestamp": "2026-06-26T10:00:00Z",
+  "messages": [
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-06-26T10:00:00Z",
+      "text": "Q3 2026 UA budget plan is up on Confluence for review. Headline: $5.10M paid for Jul-Sep, of which $4.95M is base plan (~$53.8k/day, +4% vs June run-rate) and $153k (3%) is a holdback. Split: Meta 32%, Google 24%, AppLovin 21%, TikTok 14%, Unity 10%. Guardrails: blended D7 ROAS >= 18% on mature cohorts, D30 ROAS >= 42%."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Chloe Nguyen",
+      "role": "Finance Business Partner, Marketing",
+      "timestamp": "2026-06-26T11:30:00Z",
+      "text": "Numbers tie. Confirming the 3% holdback stays unallocated until September and is only released if ROAS guardrails hold."
+    },
+    {
+      "author": "Marisol Okafor",
+      "role": "CMO",
+      "timestamp": "2026-06-26T14:00:00Z",
+      "text": "Approved, holdback as written. Tomasz owns the September release decision."
+    }
+  ]
+}

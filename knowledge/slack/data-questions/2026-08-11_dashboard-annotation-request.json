@@ -1,0 +1,28 @@
+{
+  "id": "data-questions_2026-08-11_dashboard-annotation-request",
+  "channel": "#data-questions",
+  "author": "Tomasz Wierzbicki",
+  "timestamp": "2026-08-11T12:00:00Z",
+  "messages": [
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-08-11T12:00:00Z",
+      "text": "Can we get annotations on the UA dashboards for the known events? People keep asking me about the same spikes."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-08-11T12:20:00Z",
+      "text": "Adding three: (1) unity_video_retarget invalid traffic from 2026-07-09, (2) Android 2.14.0 retention drop from 2026-07-22 cohorts, (3) Google Android attribution outage 2026-08-06 -> 08-09."
+    },
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-08-11T12:22:00Z",
+      "text": ":pray:"
+    }
+  ]
+}

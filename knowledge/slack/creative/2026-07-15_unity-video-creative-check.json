@@ -1,0 +1,34 @@
+{
+  "id": "creative_2026-07-15_unity-video-creative-check",
+  "channel": "#creative",
+  "author": "Daniel Esposito",
+  "timestamp": "2026-07-15T08:40:00Z",
+  "messages": [
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-07-15T08:40:00Z",
+      "text": "Quick one: did anything change on the Unity video creatives (UNT-VID-01..03) around Jul 9? unity_video_retarget CPI more than halved and I'm trying to work out if it's creative-driven."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Hana Kobayashi",
+      "role": "Creative Lead",
+      "timestamp": "2026-07-15T08:55:00Z",
+      "text": "Nothing from our side. Those three have been live unchanged since June 2. No new uploads, no end-card changes."
+    },
+    {
+      "author": "Lucas Ferreira",
+      "role": "Motion Designer",
+      "timestamp": "2026-07-15T09:01:00Z",
+      "text": "Also if it were creative you'd expect one of the three to move, not all three at once."
+    },
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-07-15T09:05:00Z",
+      "text": "Yeah, all three moved together. OK, not creative. Thanks!"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "data-questions_2026-07-16_unity-video-retarget-analysis",
+  "channel": "#data-questions",
+  "author": "Ingrid Solberg",
+  "timestamp": "2026-07-16T15:50:00Z",
+  "messages": [
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-07-16T15:50:00Z",
+      "text": "Analysis of unity_video_retarget, as asked in #ua-team. Install dates 2026-06-01 -> 2026-07-15, D1-mature cohorts.\n\nBefore (Jun 1 - Jul 8): spend ~$2.56k/day, ~2.2k installs/day, CPI $1.15, CTR 1.6%, click->install 34%, D1 34%.\nAfter (Jul 13 - 15, after a 4-day ramp from Jul 9): spend ~$2.6k/day, ~5.1k installs/day, CPI ~$0.50, CTR ~8.0%, click->install ~16%, D1 ~15%.\n\nSister campaign unity_playable_installs: no change on any metric.\nReading: a flood of clicks plus extra installs that never come back. Textbook click spam / install fraud. Revenue per day hasn't changed, so the 'cheap' installs add nothing. Checks: ua_spend aggregated to cohort grain matches cohorts.installs for this campaign, no fan-out."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-07-16T16:00:00Z",
+      "text": "Convincing. I was ready to put +50% on this :grimacing:"
+    },
+    {
+      "author": "Kwame Asante",
+      "role": "Analytics Engineer (MMP & pipelines)",
+      "timestamp": "2026-07-16T16:12:00Z",
+      "text": "Click-to-install time distribution in Attributa also shows a big bump of very long CTIT installs from this campaign since Jul 9. Matches click flooding."
+    },
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-07-16T16:15:00Z",
+      "text": "Thanks Kwame. I'll footnote the campaign in the weekly report from now on."
+    }
+  ]
+}

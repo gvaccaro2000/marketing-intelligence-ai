@@ -1,0 +1,34 @@
+{
+  "id": "marketing-leads_2026-08-14_postmortem-review",
+  "channel": "#marketing-leads",
+  "author": "Kwame Asante",
+  "timestamp": "2026-08-14T15:00:00Z",
+  "messages": [
+    {
+      "author": "Kwame Asante",
+      "role": "Analytics Engineer (MMP & pipelines)",
+      "timestamp": "2026-08-14T15:00:00Z",
+      "text": "Post-mortem for the Google Android attribution outage (Aug 6-9) is on Confluence. Main action items: (1) post-rotation health check for every network link, (2) alert on paid click->install CVR drop + same-platform organic spike, (3) dashboards annotate Aug 6-9, (4) Google Android excluded from CPI/ROAS trend reads for those dates. Review meeting Monday."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-08-14T15:20:00Z",
+      "text": "Read it, looks good. One addition: note that Attributa can't restate, so the Organic Android numbers for those days stay inflated forever."
+    },
+    {
+      "author": "Kwame Asante",
+      "role": "Analytics Engineer (MMP & pipelines)",
+      "timestamp": "2026-08-14T15:24:00Z",
+      "text": "Added."
+    },
+    {
+      "author": "Marisol Okafor",
+      "role": "CMO",
+      "timestamp": "2026-08-17T17:00:00Z",
+      "text": "Reviewed in the meeting. All four actions approved, owners as listed. Alert (2) is live as of today."
+    }
+  ]
+}

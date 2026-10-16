@@ -1,0 +1,28 @@
+{
+  "id": "ua-team_2026-08-19_de-fr-localized-creatives",
+  "channel": "#ua-team",
+  "author": "Priya Raman",
+  "timestamp": "2026-08-19T10:00:00Z",
+  "messages": [
+    {
+      "author": "Priya Raman",
+      "role": "UA Manager (Meta, TikTok)",
+      "timestamp": "2026-08-19T10:00:00Z",
+      "text": "DE and FR localized versions of META-BRD-02 have been running 10 days. CTR is up ~6% vs the English version with subtitles, CPI is about the same. Not a big win, but they're cheap to make, so we'll keep them."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Hana Kobayashi",
+      "role": "Creative Lead",
+      "timestamp": "2026-08-19T10:12:00Z",
+      "text": "Lucas can do IT/ES versions too if we ever open those markets :wink:"
+    },
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-08-19T10:20:00Z",
+      "text": "Not in Q3. Six countries is enough for now."
+    }
+  ]
+}

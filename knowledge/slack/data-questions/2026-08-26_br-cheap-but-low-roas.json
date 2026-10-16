@@ -1,0 +1,28 @@
+{
+  "id": "data-questions_2026-08-26_br-cheap-but-low-roas",
+  "channel": "#data-questions",
+  "author": "Chloe Nguyen",
+  "timestamp": "2026-08-26T13:00:00Z",
+  "messages": [
+    {
+      "author": "Chloe Nguyen",
+      "role": "Finance Business Partner, Marketing",
+      "timestamp": "2026-08-26T13:00:00Z",
+      "text": "BR has the cheapest CPI by far but its ROAS is weak. Why do we keep ~20% of spend there?"
+    }
+  ],
+  "replies": [
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-08-26T13:20:00Z",
+      "text": "Deliberate. BR is our volume and lookalike-seed market: cheap installs keep the networks' algorithms fed and grow the player base for social features. We cap its share instead of optimising it on ROAS alone. It's in the Q3 plan under 'market roles'."
+    },
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-08-26T13:30:00Z",
+      "text": "For comparison: JP is the opposite, highest retention and payer rate, so we pay more per install there."
+    }
+  ]
+}

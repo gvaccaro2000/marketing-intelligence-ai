@@ -1,0 +1,34 @@
+{
+  "id": "marketing-leads_2026-08-08_google-android-outage-update",
+  "channel": "#marketing-leads",
+  "author": "Tomasz Wierzbicki",
+  "timestamp": "2026-08-08T09:00:00Z",
+  "messages": [
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-08-08T09:00:00Z",
+      "text": "Status: Google Android installs are under-reported since Aug 6 because the Attributa <-> Google link for Android didn't pick up the rotated credentials. Delivery is normal (spend and clicks flat), installs are landing as Organic. Fix in progress with Attributa. We are NOT pausing Google. CPI/ROAS for Google Android on these days should be ignored."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Marisol Okafor",
+      "role": "CMO",
+      "timestamp": "2026-08-08T09:10:00Z",
+      "text": "Thanks for the clear note. Who owns the credential rotation process?"
+    },
+    {
+      "author": "Kwame Asante",
+      "role": "Analytics Engineer (MMP & pipelines)",
+      "timestamp": "2026-08-08T09:20:00Z",
+      "text": "Me. I'll write the post-mortem once it's fixed, including a check that every network link re-authenticates after rotation."
+    },
+    {
+      "author": "Marisol Okafor",
+      "role": "CMO",
+      "timestamp": "2026-08-08T09:22:00Z",
+      "text": ":+1: and I want an alert for 'paid CVR crashes while organic spikes', that pattern should page someone."
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "id": "ua-team_2026-08-07_google-android-installs-collapse",
+  "channel": "#ua-team",
+  "author": "Daniel Esposito",
+  "timestamp": "2026-08-07T07:55:00Z",
+  "messages": [
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-08-07T07:55:00Z",
+      "text": ":rotating_light: Google Android installs fell off a cliff yesterday. Aug 6: 282 installs on ~$6.0k spend (CPI $21!). Normal is ~4.5k/day at ~$1.29. Clicks are normal (~21k). iOS Google is fine. Should we pause Google Android until we understand it?"
+    }
+  ],
+  "replies": [
+    {
+      "author": "Priya Raman",
+      "role": "UA Manager (Meta, TikTok)",
+      "timestamp": "2026-08-07T08:03:00Z",
+      "text": "Clicks normal and installs at 6%? That smells like tracking, not demand."
+    },
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-08-07T08:10:00Z",
+      "text": "Don't pause yet. Pausing a UAC campaign resets learning and costs us 1-2 weeks. @Kwame Asante can you check the Attributa <-> Google link for Android?"
+    },
+    {
+      "author": "Kwame Asante",
+      "role": "Analytics Engineer (MMP & pipelines)",
+      "timestamp": "2026-08-07T08:40:00Z",
+      "text": "Looking. Also: Organic Android jumped from ~4.0k to 8.2k on Aug 6. Total Android installs are basically unchanged. So the installs are happening, they're just not being attributed to Google."
+    },
+    {
+      "author": "Kwame Asante",
+      "role": "Analytics Engineer (MMP & pipelines)",
+      "timestamp": "2026-08-07T11:25:00Z",
+      "text": "Found something: we rotated API credentials for all network integrations on the evening of Aug 5. The Android Google Ads link in Attributa didn't pick up the new credential, so Google Android installs fall through to Organic. iOS link re-authenticated fine. Opened a P1 with Attributa support."
+    },
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-08-07T11:30:00Z",
+      "text": "Great find. Decision: keep Google Android running at current budget. We exclude Aug 6 onwards from CPI/ROAS reads until it's fixed."
+    },
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-08-07T11:33:00Z",
+      "text": "Agreed, not pausing."
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "creative_2026-08-05_brand-font-licence",
+  "channel": "#creative",
+  "author": "Lucas Ferreira",
+  "timestamp": "2026-08-05T13:00:00Z",
+  "messages": [
+    {
+      "author": "Lucas Ferreira",
+      "role": "Motion Designer",
+      "timestamp": "2026-08-05T13:00:00Z",
+      "text": "PSA: the display font we use for the 'ROLL!' headline is licensed for print and app, *not* for paid video. Legal flagged it. I've switched all new exports to the house font from the brand kit."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Hana Kobayashi",
+      "role": "Creative Lead",
+      "timestamp": "2026-08-05T13:10:00Z",
+      "text": "Thanks for catching it. Existing live ads are fine until the next rotation, per Legal."
+    },
+    {
+      "author": "Oscar Lindqvist",
+      "role": "Junior UA Analyst",
+      "timestamp": "2026-08-05T13:15:00Z",
+      "text": "TIL fonts have usage rights :sweat_smile:"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "id": "ua-team_2026-07-14_unity-video-retarget-cpi-drop",
+  "channel": "#ua-team",
+  "author": "Daniel Esposito",
+  "timestamp": "2026-07-14T09:12:00Z",
+  "messages": [
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-07-14T09:12:00Z",
+      "text": "Good news for once :tada: unity_video_retarget CPI has dropped from ~$1.15 to $0.48 yesterday. Installs more than doubled (2.2k -> 5.8k/day) on the same budget. I think Unity's new video placements finally kicked in. Proposing +50% budget on it from tomorrow.",
+      "reactions": [
+        ":fire: 3"
+      ]
+    }
+  ],
+  "replies": [
+    {
+      "author": "Priya Raman",
+      "role": "UA Manager (Meta, TikTok)",
+      "timestamp": "2026-07-14T09:20:00Z",
+      "text": "Wow. Is it all three creatives or just one?"
+    },
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-07-14T09:24:00Z",
+      "text": "All three, roughly the same. UNT-VID-03 maybe a bit more. Asking creative if anything changed."
+    },
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-07-14T09:41:00Z",
+      "text": "Before we pour money in: a 2.5x efficiency jump overnight on a retargeting campaign is unusual. @Ingrid Solberg can you look at CTR / CVR / D1 for this campaign before we scale?"
+    },
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-07-14T09:45:00Z",
+      "text": "On it, will post in #data-questions."
+    },
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-07-14T09:47:00Z",
+      "text": "Fair. Holding the +50% until then."
+    },
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-07-16T16:05:00Z",
+      "text": "Posted in #data-questions. Short version: CTR went from 1.6% to ~8%, click->install CVR halved, and D1 retention of the new cohorts is ~15% vs ~34% before. Spend didn't change. This looks like click spam / install fraud, not a better placement. Please don't scale."
+    },
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-07-16T16:20:00Z",
+      "text": "Ugh. OK, that kills it. Budget stays flat, opening a ticket with Unity."
+    }
+  ]
+}

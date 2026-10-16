@@ -1,0 +1,22 @@
+{
+  "id": "data-questions_2026-08-03_which-week-for-weekly-report",
+  "channel": "#data-questions",
+  "author": "Oscar Lindqvist",
+  "timestamp": "2026-08-03T08:30:00Z",
+  "messages": [
+    {
+      "author": "Oscar Lindqvist",
+      "role": "Junior UA Analyst",
+      "timestamp": "2026-08-03T08:30:00Z",
+      "text": "For the weekly UA report, which week do I use on a Monday morning: the week that just ended or the one before?"
+    }
+  ],
+  "replies": [
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-08-03T08:40:00Z",
+      "text": "The week that just ended (Mon-Sun), compared with the week before it. D7 ROAS in that report always uses the latest D7-mature cohorts, which lag by a week. State both windows at the top. Template is on Confluence."
+    }
+  ]
+}

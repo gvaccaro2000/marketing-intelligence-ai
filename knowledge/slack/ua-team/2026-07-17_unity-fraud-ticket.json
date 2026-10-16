@@ -1,0 +1,34 @@
+{
+  "id": "ua-team_2026-07-17_unity-fraud-ticket",
+  "channel": "#ua-team",
+  "author": "Daniel Esposito",
+  "timestamp": "2026-07-17T10:02:00Z",
+  "messages": [
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-07-17T10:02:00Z",
+      "text": "Unity ticket opened for unity_video_retarget (invalid traffic since 2026-07-09). Also asked Kwame to turn on the stricter click-flooding rule in Attributa Protect for this campaign. Budget held flat per #marketing-leads decision."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Kwame Asante",
+      "role": "Analytics Engineer (MMP & pipelines)",
+      "timestamp": "2026-07-17T10:30:00Z",
+      "text": "Rule is on. Heads-up: it only rejects *new* installs that fail the click-to-install-time check. It does not rewrite history, and our warehouse tables keep the raw attributed installs either way."
+    },
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-07-17T10:41:00Z",
+      "text": "Noted. So the dashboards will still show the inflated installs. Ingrid, please footnote unity_video_retarget in the weekly report and leave it out of CPI benchmarks."
+    },
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-07-17T10:44:00Z",
+      "text": "Will do."
+    }
+  ]
+}

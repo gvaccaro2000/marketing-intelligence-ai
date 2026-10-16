@@ -25,3 +25,8 @@ Cohort metrics that have not matured by 2026-08-29 are NULL.
 
 The data contains three hidden anomalies. Try to find them before you open
 `answers/ANOMALIES.md`.
+
+## Knowledge base
+
+`knowledge/` holds a synthetic company knowledge base for the same period: Slack threads
+(JSON) and Confluence-style wiki pages (Markdown). See `knowledge/README.md`.

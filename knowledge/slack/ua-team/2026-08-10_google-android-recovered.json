@@ -1,0 +1,40 @@
+{
+  "id": "ua-team_2026-08-10_google-android-recovered",
+  "channel": "#ua-team",
+  "author": "Kwame Asante",
+  "timestamp": "2026-08-10T08:20:00Z",
+  "messages": [
+    {
+      "author": "Kwame Asante",
+      "role": "Analytics Engineer (MMP & pipelines)",
+      "timestamp": "2026-08-10T08:20:00Z",
+      "text": "Google Android attribution is back. The re-linked integration went live late on Aug 9, and Aug 10 shows 4,490 Google Android installs (CPI $1.33) and Organic Android back to ~4.1k. Affected window is Aug 6 to Aug 9, four full days."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-08-10T08:26:00Z",
+      "text": "Confirmed in the network UI. Phew :sweat_smile:"
+    },
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-08-10T08:45:00Z",
+      "text": "Total misattributed: about 17k Google Android installs counted as Organic (Organic Android was ~35k over the 4 days vs ~16.5k normal). I'll annotate the dashboard and the weekly report."
+    },
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-08-10T09:00:00Z",
+      "text": "Thanks. Can Attributa restate the four days?"
+    },
+    {
+      "author": "Kwame Asante",
+      "role": "Analytics Engineer (MMP & pipelines)",
+      "timestamp": "2026-08-10T09:12:00Z",
+      "text": "Asked. They say no: postbacks that failed during the window can't be re-attributed. Our tables will keep showing those installs as Organic. Post-mortem doc to follow."
+    }
+  ]
+}

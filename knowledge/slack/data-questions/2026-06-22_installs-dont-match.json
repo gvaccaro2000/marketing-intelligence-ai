@@ -1,0 +1,28 @@
+{
+  "id": "data-questions_2026-06-22_installs-dont-match",
+  "channel": "#data-questions",
+  "author": "Priya Raman",
+  "timestamp": "2026-06-22T11:00:00Z",
+  "messages": [
+    {
+      "author": "Priya Raman",
+      "role": "UA Manager (Meta, TikTok)",
+      "timestamp": "2026-06-22T11:00:00Z",
+      "text": "My join of ua_spend to cohorts gives 3x the installs the dashboard shows. What am I doing wrong?"
+    }
+  ],
+  "replies": [
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-06-22T11:05:00Z",
+      "text": "Classic creative fan-out :slightly_smiling_face: ua_spend has one row per creative (3 per campaign), cohorts has none. Sum ua_spend by date/channel/campaign/country/platform first, then join on date = install_date. Installs reconcile exactly after that."
+    },
+    {
+      "author": "Priya Raman",
+      "role": "UA Manager (Meta, TikTok)",
+      "timestamp": "2026-06-22T11:15:00Z",
+      "text": "That was it. Thanks!"
+    }
+  ]
+}

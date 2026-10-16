@@ -1,0 +1,34 @@
+{
+  "id": "marketing-leads_2026-07-17_unity-scaling-decision",
+  "channel": "#marketing-leads",
+  "author": "Tomasz Wierzbicki",
+  "timestamp": "2026-07-17T09:00:00Z",
+  "messages": [
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-07-17T09:00:00Z",
+      "text": "Decision needed on unity_video_retarget. Since Jul 9 its CPI dropped from ~$1.15 to ~$0.50 on flat spend. Ingrid's analysis says it's invalid traffic: CTR ~5x, CVR halved, D1 of new installs ~15% vs ~34%, payer conversion less than half. Recommendation: (1) no budget increase, (2) fraud ticket with Unity + stricter Attributa Protect rule, (3) exclude the campaign from CPI benchmarks and install KPIs, (4) ask for makegoods."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Marisol Okafor",
+      "role": "CMO",
+      "timestamp": "2026-07-17T09:25:00Z",
+      "text": "Agree with all four. Why not pause it outright?"
+    },
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-07-17T09:31:00Z",
+      "text": "Revenue from the campaign hasn't changed, so the real users are still there and D7 ROAS is flat. Pausing loses those. If Unity can't clean it up we pause."
+    },
+    {
+      "author": "Marisol Okafor",
+      "role": "CMO",
+      "timestamp": "2026-07-17T09:35:00Z",
+      "text": "OK. Approved. Please don't let the 'cheap CPI' land in any exec slides."
+    }
+  ]
+}

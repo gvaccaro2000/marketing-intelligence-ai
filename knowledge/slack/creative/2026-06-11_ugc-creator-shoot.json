@@ -1,0 +1,34 @@
+{
+  "id": "creative_2026-06-11_ugc-creator-shoot",
+  "channel": "#creative",
+  "author": "Hana Kobayashi",
+  "timestamp": "2026-06-11T14:00:00Z",
+  "messages": [
+    {
+      "author": "Hana Kobayashi",
+      "role": "Creative Lead",
+      "timestamp": "2026-06-11T14:00:00Z",
+      "text": "Next UGC shoot is booked for Jun 25. Three creators, one per persona: 'commute gamer', 'family game night', 'competitive dice nerd'. Brief is in the doc, please add hooks you want tested by Friday."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Priya Raman",
+      "role": "UA Manager (Meta, TikTok)",
+      "timestamp": "2026-06-11T14:20:00Z",
+      "text": "Hook request: 'I didn't expect a dice game to be this stressful' worked well in the June tests."
+    },
+    {
+      "author": "Lucas Ferreira",
+      "role": "Motion Designer",
+      "timestamp": "2026-06-11T14:31:00Z",
+      "text": "Can we get vertical 9:16 and 4:5 both? Meta feed still likes 4:5."
+    },
+    {
+      "author": "Hana Kobayashi",
+      "role": "Creative Lead",
+      "timestamp": "2026-06-11T14:35:00Z",
+      "text": "Yes, both. Adding to the shot list."
+    }
+  ]
+}
