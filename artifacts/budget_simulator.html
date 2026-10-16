@@ -1,0 +1,295 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!-- Template for scripts/build_simulator.py, which fills the DATA / PRESET blocks and the #win
+     window from reports/dashboard/*.csv and the weekly report JSON, and writes
+     reports/budget_simulator.html. Keep the BEGIN/END markers when editing. -->
+<title>Dice Kingdom Budget Simulator</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
+<style>
+/* Layout: a budget desk — controls bar, scenario-vs-baseline strip, then one row per segment with its own spend slider. */
+:root {
+  --bg: #f6f7f8;
+  --panel: #ffffff;
+  --fg: #16202a;
+  --muted: #5d6b78;
+  --line: #dde2e7;
+  --accent: #1f6f8b;
+  --accent-soft: #e2eef3;
+  --good: #1d7a4a;
+  --bad: #b3362d;
+  --warn-bg: #fdf4e3;
+  --warn-fg: #7a5410;
+  --track: #e6eaee;
+  --font-display: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11171c; --panel: #182128; --fg: #e6ecf0; --muted: #96a4b0; --line: #2a3640;
+    --accent: #5fb3cf; --accent-soft: #1d3440; --good: #5cc48b; --bad: #f07a6f;
+    --warn-bg: #3a2e14; --warn-fg: #f1cf86; --track: #26323b; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11171c; --panel: #182128; --fg: #e6ecf0; --muted: #96a4b0; --line: #2a3640;
+  --accent: #5fb3cf; --accent-soft: #1d3440; --good: #5cc48b; --bad: #f07a6f;
+  --warn-bg: #3a2e14; --warn-fg: #f1cf86; --track: #26323b; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.45; }
+.wrap { max-width: 1120px; margin-inline: auto; padding-block: 28px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 20px; }
+header h1 { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.7rem, 3.4vw, 2.3rem); margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+header p { margin: 6px 0 0; color: var(--muted); max-width: 68ch; }
+.eyebrow { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+
+.controls { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; padding: 14px 18px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { font: inherit; font-size: 0.88rem; padding: 7px 14px; background: transparent; color: var(--fg); border: 0; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--panel); font-weight: 600; }
+.ctl { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; }
+.ctl label { color: var(--muted); }
+.ctl output { font-family: var(--font-data); font-size: 0.82rem; min-width: 6.5ch; }
+.btn { font: inherit; font-size: 0.86rem; padding: 7px 13px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); cursor: pointer; }
+.btn.primary { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.btn:hover { background: var(--accent-soft); }
+.btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+.spacer { flex: 1 1 auto; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12.5rem), 1fr)); }
+.kpi { padding: 14px 18px; border-right: 1px solid var(--line); min-width: 0; }
+.kpi:last-child { border-right: 0; }
+.kpi .val { font-family: var(--font-display); font-size: 1.75rem; margin: 2px 0 2px; font-variant-numeric: tabular-nums; }
+.kpi .base { font-family: var(--font-data); font-size: 0.78rem; color: var(--muted); }
+.delta { font-family: var(--font-data); font-size: 0.8rem; }
+.good { color: var(--good); }
+.bad { color: var(--bad); }
+.flat { color: var(--muted); }
+
+.budget { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; padding: 10px 14px; border-radius: 8px; background: var(--warn-bg); color: var(--warn-fg); font-size: 0.88rem; }
+.budget[hidden] { display: none !important; }
+.budget .btn { background: transparent; border-color: currentColor; color: inherit; }
+
+.tablewrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; min-width: 760px; }
+th { text-align: right; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+td { text-align: right; padding: 10px 14px; border-bottom: 1px solid var(--line); font-family: var(--font-data); font-size: 0.86rem; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+th:first-child, td:first-child { text-align: left; font-family: var(--font-body); }
+td.name { font-weight: 600; font-size: 0.95rem; }
+td.slider { width: 30%; min-width: 220px; }
+.sl { display: flex; align-items: center; gap: 10px; }
+.sl input { flex: 1; accent-color: var(--accent); min-width: 120px; }
+.sl output { min-width: 6.5ch; text-align: right; }
+.mbar { display: inline-block; height: 6px; border-radius: 3px; background: var(--accent); vertical-align: middle; margin-left: 8px; opacity: 0.75; }
+.foot { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 20px; }
+.note { padding: 16px 18px; font-size: 0.88rem; color: var(--muted); }
+.note h2 { font-family: var(--font-body); font-size: 0.95rem; font-weight: 600; color: var(--fg); margin: 0 0 6px; }
+.note p { margin: 0 0 8px; max-width: 70ch; }
+.note p:last-child { margin-bottom: 0; }
+code { font-family: var(--font-data); font-size: 0.82em; }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Dice Kingdom · paid UA · weekly budget</div>
+    <h1>What happens if we move the money?</h1>
+    <p id="intro">Move each line's weekly spend and see the projected installs, CPI and D7 revenue against the baseline. Baseline is the average week from <span id="win">Jul 27 – Aug 23, 2026</span>, taken from the validated export of the weekly UA report skill.</p>
+  </header>
+
+  <div class="panel controls" role="group" aria-label="Scenario controls">
+    <div class="seg" role="group" aria-label="Split budget by">
+      <button type="button" id="mode-channel" aria-pressed="true">By channel</button>
+      <button type="button" id="mode-country" aria-pressed="false">By country</button>
+    </div>
+    <div class="ctl">
+      <label for="sat">Diminishing returns</label>
+      <input type="range" id="sat" min="0" max="0.6" step="0.05" value="0.3" aria-describedby="sat-out">
+      <output id="sat-out" for="sat">medium</output>
+    </div>
+    <div class="spacer"></div>
+    <button type="button" class="btn primary" id="preset">Apply this week's recommendation</button>
+    <button type="button" class="btn" id="reset">Reset</button>
+  </div>
+
+  <div class="budget" id="budget" hidden>
+    <span id="budget-msg"></span>
+    <button type="button" class="btn" id="balance">Keep total budget unchanged</button>
+  </div>
+
+  <section class="panel kpis" aria-label="Scenario vs baseline">
+    <div class="kpi"><div class="eyebrow">Weekly spend</div><div class="val" id="k-spend"></div><div class="base" id="b-spend"></div><div class="delta" id="d-spend"></div></div>
+    <div class="kpi"><div class="eyebrow">Installs per week</div><div class="val" id="k-inst"></div><div class="base" id="b-inst"></div><div class="delta" id="d-inst"></div></div>
+    <div class="kpi"><div class="eyebrow">Blended CPI</div><div class="val" id="k-cpi"></div><div class="base" id="b-cpi"></div><div class="delta" id="d-cpi"></div></div>
+    <div class="kpi"><div class="eyebrow">D7 revenue per week</div><div class="val" id="k-rev"></div><div class="base" id="b-rev"></div><div class="delta" id="d-rev"></div></div>
+    <div class="kpi"><div class="eyebrow">D7 ROAS</div><div class="val" id="k-roas"></div><div class="base" id="b-roas"></div><div class="delta" id="d-roas"></div></div>
+  </section>
+
+  <section class="panel">
+    <div class="tablewrap">
+      <table aria-label="Budget by segment">
+        <thead><tr>
+          <th id="h-name">Channel</th><th>Baseline spend</th><th>Change</th><th>New spend</th>
+          <th>Installs Δ</th><th>D7 revenue Δ</th><th>D7 ROAS</th><th title="Projected D7 return on the next dollar at the new spend level">Next-$ ROAS</th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="foot">
+    <div class="panel note">
+      <h2>How the projection works</h2>
+      <p>Each line keeps its baseline D7 ROAS and CPI at its baseline spend. When spend changes by a factor <code>f</code>, installs and D7 revenue scale by <code>f<sup>b</sup></code>, where <code>b</code> = 1 − the diminishing-returns setting. With <code>b</code> below 1, extra spend buys progressively fewer installs, and cuts lose less than proportionally.</p>
+      <p><b>Next-$ ROAS</b> is the D7 return on one more dollar at the new spend. Moving money pays off while the line you add to has a higher next-$ ROAS than the line you take from.</p>
+    </div>
+    <div class="panel note">
+      <h2>Read before acting</h2>
+      <p>This is a planning aid, not a forecast. Past ROAS doesn't guarantee future ROAS: auctions, creatives and seasonality change, and the diminishing-returns curve is an assumption, not a measurement.</p>
+      <p>Test a shift on a small share of budget first (for example 10% for two weeks) and compare D7 ROAS against the baseline before scaling it. Data is synthetic, for a fictional game.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  /*BEGIN:DATA*/
+  // Baseline: average complete week Jul 27 – Aug 23, 2026, from scripts/export_dashboard_data.py (weekly_channel.csv / weekly_country.csv).
+  // D7 ROAS = D7 revenue / D7-mature spend over those four weeks.
+  const DATA = {"channel":[{"name":"Meta","spend":122455,"installs":87805,"roas":0.1929},{"name":"Google","spend":91950,"installs":55608,"roas":0.1718},{"name":"AppLovin","spend":81505,"installs":62641,"roas":0.2263},{"name":"TikTok","spend":53214,"installs":48415,"roas":0.2083},{"name":"Unity","spend":39496,"installs":55568,"roas":0.2053}],
+                "country":[{"name":"US","spend":139824,"installs":60095,"roas":0.2085},{"name":"BR","spend":77670,"installs":166577,"roas":0.1755},{"name":"JP","spend":54383,"installs":20032,"roas":0.2273},{"name":"DE","spend":38996,"installs":19282,"roas":0.1869},{"name":"UK","spend":38901,"installs":21126,"roas":0.1929},{"name":"FR","spend":38845,"installs":22927,"roas":0.1831}]};
+  /*END:DATA*/
+  /*BEGIN:PRESET*/
+  // Recommendation from the weekly UA report (week of Aug 17): shift ~$9,193/wk (10% of Google) from Google to AppLovin.
+  // moves = USD/wk per line; rebalance = spread the freed budget over the untouched lines afterwards.
+  const PRESET = {"mode":"channel","moves":{"Google":-9193,"AppLovin":9193},"rebalance":false,"label":"Google −$9,193/wk, AppLovin +$9,193/wk"};
+  /*END:PRESET*/
+
+  const state = { mode: "channel", sat: 0.3, pct: { channel: {}, country: {} } };
+  const $ = (id) => document.getElementById(id);
+  const usd0 = (v) => "$" + Math.round(v).toLocaleString("en-US");
+  const usdK = (v) => "$" + (Math.abs(v) >= 1000 ? (v / 1000).toFixed(1) + "k" : Math.round(v).toString());
+  const cnt = (v) => (Math.abs(v) >= 1000 ? (v / 1000).toFixed(1) + "k" : Math.round(v).toString());
+  const pct1 = (v) => (v * 100).toFixed(1) + "%";
+  const signed = (s, v) => (v > 0 ? "+" : v < 0 ? "−" : "±") + s(Math.abs(v));
+  const satLabel = (s) => (s === 0 ? "none" : s <= 0.15 ? "low" : s <= 0.35 ? "medium" : "high");
+  const hasPreset = Object.keys(PRESET.moves).length > 0;
+
+  const project = (row, p) => {
+    const b = 1 - state.sat, f = Math.max(0.0001, 1 + p / 100), scale = Math.pow(f, b);
+    const spend = row.spend * f, installs = row.installs * scale, rev = row.roas * row.spend * scale;
+    return { spend, installs, rev, roas: rev / spend, next: row.roas * b * Math.pow(f, b - 1) };
+  };
+
+  const setDelta = (el, v, fmt, goodUp) => {
+    const tiny = Math.abs(v) < 1e-9;
+    el.className = "delta " + (tiny || goodUp === null ? "flat" : (v > 0) === goodUp ? "good" : "bad");
+    el.textContent = tiny ? "no change" : signed(fmt, v) + " vs baseline";
+  };
+
+  function buildRows() {
+    const tb = $("rows"); tb.replaceChildren();
+    $("h-name").textContent = state.mode === "channel" ? "Channel" : "Country";
+    DATA[state.mode].forEach((r) => {
+      const tr = document.createElement("tr"); tr.dataset.name = r.name;
+      const id = "sl-" + state.mode + "-" + r.name;
+      tr.innerHTML = '<td class="name"></td><td class="b"></td><td class="slider"><div class="sl"><input type="range" min="-50" max="50" step="0.5"><output></output></div></td><td class="ns"></td><td class="di"></td><td class="dr"></td><td class="ro"></td><td class="nx"></td>';
+      tr.querySelector(".name").textContent = r.name;
+      tr.querySelector(".b").textContent = usd0(r.spend);
+      const inp = tr.querySelector("input"); inp.id = id; inp.setAttribute("aria-label", "Change in " + r.name + " weekly spend, percent");
+      inp.value = state.pct[state.mode][r.name] || 0;
+      inp.addEventListener("input", () => { state.pct[state.mode][r.name] = Number(inp.value); render(); });
+      tb.appendChild(tr);
+    });
+  }
+
+  function render() {
+    const rows = DATA[state.mode], pct = state.pct[state.mode];
+    let B = { spend: 0, installs: 0, rev: 0 }, S = { spend: 0, installs: 0, rev: 0 };
+    const maxNext = Math.max(...rows.map((r) => project(r, pct[r.name] || 0).next));
+    rows.forEach((r) => {
+      const p = pct[r.name] || 0, s = project(r, p), base = project(r, 0);
+      B.spend += r.spend; B.installs += r.installs; B.rev += r.roas * r.spend;
+      S.spend += s.spend; S.installs += s.installs; S.rev += s.rev;
+      const tr = document.querySelector('#rows tr[data-name="' + CSS.escape(r.name) + '"]');
+      const inp = tr.querySelector("input"); if (Number(inp.value) !== p) inp.value = p;
+      tr.querySelector("output").textContent = (p > 0 ? "+" : "") + p.toFixed(1) + "%";
+      tr.querySelector(".ns").textContent = usd0(s.spend);
+      const di = tr.querySelector(".di"), dr = tr.querySelector(".dr");
+      const dI = s.installs - base.installs, dR = s.rev - base.rev;
+      di.textContent = Math.abs(dI) < 0.5 ? "–" : signed(cnt, dI); di.className = "di " + (Math.abs(dI) < 0.5 ? "flat" : dI > 0 ? "good" : "bad");
+      dr.textContent = Math.abs(dR) < 0.5 ? "–" : signed(usdK, dR); dr.className = "dr " + (Math.abs(dR) < 0.5 ? "flat" : dR > 0 ? "good" : "bad");
+      tr.querySelector(".ro").textContent = pct1(s.roas);
+      const nx = tr.querySelector(".nx"); nx.replaceChildren(document.createTextNode(pct1(s.next)));
+      const bar = document.createElement("span"); bar.className = "mbar"; bar.style.width = Math.round(40 * s.next / maxNext) + "px"; nx.appendChild(bar);
+    });
+    $("k-spend").textContent = usdK(S.spend); $("b-spend").textContent = "baseline " + usdK(B.spend);
+    setDelta($("d-spend"), S.spend - B.spend, usdK, null);
+    $("k-inst").textContent = cnt(S.installs); $("b-inst").textContent = "baseline " + cnt(B.installs);
+    setDelta($("d-inst"), S.installs - B.installs, cnt, true);
+    const cS = S.spend / S.installs, cB = B.spend / B.installs;
+    $("k-cpi").textContent = "$" + cS.toFixed(2); $("b-cpi").textContent = "baseline $" + cB.toFixed(2);
+    setDelta($("d-cpi"), cS - cB, (v) => "$" + v.toFixed(3), false);
+    $("k-rev").textContent = usdK(S.rev); $("b-rev").textContent = "baseline " + usdK(B.rev);
+    setDelta($("d-rev"), S.rev - B.rev, usdK, true);
+    $("k-roas").textContent = pct1(S.rev / S.spend); $("b-roas").textContent = "baseline " + pct1(B.rev / B.spend);
+    setDelta($("d-roas"), (S.rev / S.spend - B.rev / B.spend) * 100, (v) => v.toFixed(2) + " pp", true);
+
+    const gap = S.spend - B.spend;
+    $("budget").hidden = Math.abs(gap) < 50;
+    $("budget-msg").textContent = "This scenario " + (gap > 0 ? "adds " : "cuts ") + usd0(Math.abs(gap)) + " per week to the total budget.";
+    $("sat-out").textContent = satLabel(state.sat);
+    $("preset").disabled = !hasPreset || state.mode !== PRESET.mode;
+    $("preset").title = !hasPreset ? PRESET.label
+      : state.mode === PRESET.mode ? PRESET.label + ", as the weekly report suggests"
+      : "The recommendation is a " + PRESET.mode + " move: switch to By " + PRESET.mode;
+  }
+
+  function setMode(m) {
+    state.mode = m;
+    $("mode-channel").setAttribute("aria-pressed", String(m === "channel"));
+    $("mode-country").setAttribute("aria-pressed", String(m === "country"));
+    buildRows(); render();
+  }
+
+  // Scale the untouched lines so the total equals the baseline again.
+  function balance() {
+    const rows = DATA[state.mode], pct = state.pct[state.mode];
+    const touched = rows.filter((r) => (pct[r.name] || 0) !== 0), free = rows.filter((r) => (pct[r.name] || 0) === 0);
+    const pool = free.length ? free : rows;
+    const total = rows.reduce((a, r) => a + r.spend, 0);
+    const fixed = (free.length ? touched : []).reduce((a, r) => a + r.spend * (1 + (pct[r.name] || 0) / 100), 0);
+    const poolBase = pool.reduce((a, r) => a + r.spend, 0);
+    const k = (total - fixed) / poolBase;
+    if (free.length) pool.forEach((r) => { pct[r.name] = Math.max(-50, Math.min(50, Math.round((k - 1) * 1000) / 10)); });
+    else { const cur = rows.reduce((a, r) => a + r.spend * (1 + (pct[r.name] || 0) / 100), 0), s = total / cur;
+      rows.forEach((r) => { pct[r.name] = Math.max(-50, Math.min(50, Math.round(((1 + (pct[r.name] || 0) / 100) * s - 1) * 1000) / 10)); }); }
+    render();
+  }
+
+  $("mode-channel").addEventListener("click", () => setMode("channel"));
+  $("mode-country").addEventListener("click", () => setMode("country"));
+  $("sat").addEventListener("input", (e) => { state.sat = Number(e.target.value); render(); });
+  $("reset").addEventListener("click", () => { state.pct[state.mode] = {}; render(); });
+  $("balance").addEventListener("click", balance);
+  $("preset").addEventListener("click", () => {
+    const pct = {};
+    DATA[PRESET.mode].forEach((r) => {
+      const m = PRESET.moves[r.name];
+      if (m) pct[r.name] = Math.max(-50, Math.min(50, Math.round(m / r.spend * 1000) / 10));
+    });
+    state.pct[PRESET.mode] = pct;
+    if (PRESET.rebalance) balance(); else render();
+  });
+
+  // Open on the report's recommendation so the first view shows the tool working.
+  setMode(hasPreset ? PRESET.mode : "channel");
+  if (hasPreset) $("preset").click();
+})();
+</script>
+
+</body></html>
