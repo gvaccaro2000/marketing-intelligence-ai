@@ -16,7 +16,7 @@ daily_kpis (date, platform, dau, revenue, payers)
 Cohort metrics that have not matured by the data snapshot date (the last day
 of the window) are NULL, e.g. d30_retained for installs in the last 30 days.
 
-Usage: python scripts/generate_data.py [--seed 42] [--out data/marketing.duckdb]
+Usage: python scripts/generate_data.py [--seed 20260916] [--out data/marketing.duckdb]
 """
 
 from __future__ import annotations
@@ -82,7 +82,7 @@ CAMPAIGNS = {
         "unity_video_retarget": [("UNT-VID-01", 1.00, 1.0), ("UNT-VID-02", 1.03, 1.0), ("UNT-VID-03", 0.96, 0.8)],
     },
     "TikTok": {
-        "tiktok_spark_ugc": [("TT-UGC-01", 1.00, 0.8), ("TT-UGC-02", 1.45, 2.4), ("TT-UGC-03", 0.95, 0.7)],
+        "tiktok_spark_ugc": [("TT-UGC-01", 1.00, 0.8), ("TT-UGC-02", 1.05, 1.1), ("TT-UGC-03", 0.95, 0.7)],
         "tiktok_value_bidding": [("TT-VAL-01", 1.00, 1.0), ("TT-VAL-02", 1.02, 1.0), ("TT-VAL-03", 0.97, 0.9)],
     },
 }
@@ -93,21 +93,26 @@ D0_SHARE_OF_D7 = 0.34  # revenue_d0 / revenue_d7
 D30_OVER_D7 = 2.25  # revenue_d30 / revenue_d7
 
 # --- Scenario parameters -----------------------------------------------------
-FATIGUE_CREATIVE = "TT-UGC-02"
-FATIGUE_START_DAY = 32
-FATIGUE_FLOOR = 0.42  # CTR multiplier reached at the end of the window
-FATIGUE_HALF_LIFE = 14.0
+# Attribution outage: one channel/platform stops reporting most installs for a few
+# days; the unattributed installs fall into Organic instead.
+OUTAGE_CHANNEL = "Google"
+OUTAGE_PLATFORM = "Android"
+OUTAGE_START_DAY = 66
+OUTAGE_DAYS = 4
+OUTAGE_CAPTURE = 0.06  # share of installs still attributed during the outage
 
-CPM_SHIFT_CHANNEL = "AppLovin"
-CPM_SHIFT_DAY = 46
-CPM_SHIFT_RAMP = 3
-CPM_SHIFT_MULT = 1.70
+# Product regression: cohorts on one platform retain worse after an app release.
+REGRESSION_PLATFORM = "Android"
+REGRESSION_START_DAY = 51
+REGRESSION_RET_MULT = {"d1": 0.82, "d7": 0.68, "d30": 0.62}
 
-LOW_VALUE_COUNTRY = "BR"
-LOW_VALUE_PAYER_MULT = 0.17
-LOW_VALUE_ARPPU_MULT = 0.65
-LOW_VALUE_AD_MULT = 0.45
-LOW_VALUE_SHARE_END = 0.30  # budget share ramps up toward this value
+# Invalid traffic: one campaign starts buying click-spam installs that never play.
+FRAUD_CAMPAIGN = "unity_video_retarget"
+FRAUD_START_DAY = 38
+FRAUD_RAMP = 5
+FRAUD_INSTALL_MULT = 1.30  # extra fraudulent installs per genuine install at full ramp
+FRAUD_CLICK_MULT = 9.0  # fraudulent clicks per fraudulent install
+FRAUD_D1 = 0.015
 # -----------------------------------------------------------------------------
 
 
@@ -118,36 +123,27 @@ def day_factor(d: date, rng: np.random.Generator) -> float:
     return weekday * trend * rng.normal(1.0, 0.04)
 
 
-def country_shares(day_idx: int) -> dict[str, float]:
-    """Budget share by country; the low-value country is scaled up over time."""
-    shares = {c: p["share"] for c, p in COUNTRIES.items()}
-    progress = day_idx / (N_DAYS - 1)
-    target = shares[LOW_VALUE_COUNTRY] + (LOW_VALUE_SHARE_END - shares[LOW_VALUE_COUNTRY]) * progress
-    others = sum(v for c, v in shares.items() if c != LOW_VALUE_COUNTRY)
-    out = {c: v * (1 - target) / others for c, v in shares.items() if c != LOW_VALUE_COUNTRY}
-    out[LOW_VALUE_COUNTRY] = target
-    return out
+def outage_capture(channel: str, platform: str, day_idx: int) -> float:
+    if (channel == OUTAGE_CHANNEL and platform == OUTAGE_PLATFORM
+            and OUTAGE_START_DAY <= day_idx < OUTAGE_START_DAY + OUTAGE_DAYS):
+        return OUTAGE_CAPTURE
+    return 1.0
 
 
-def ctr_multiplier(creative_id: str, day_idx: int) -> float:
-    if creative_id != FATIGUE_CREATIVE or day_idx < FATIGUE_START_DAY:
-        return 1.0
-    t = day_idx - FATIGUE_START_DAY
-    return FATIGUE_FLOOR + (1 - FATIGUE_FLOOR) * 0.5 ** (t / FATIGUE_HALF_LIFE)
+def fraud_multiplier(campaign: str, day_idx: int) -> float:
+    if campaign != FRAUD_CAMPAIGN or day_idx < FRAUD_START_DAY:
+        return 0.0
+    ramp = min(1.0, (day_idx - FRAUD_START_DAY + 1) / FRAUD_RAMP)
+    return FRAUD_INSTALL_MULT * ramp
 
 
-def cpm_multiplier(channel: str, day_idx: int) -> float:
-    if channel != CPM_SHIFT_CHANNEL or day_idx < CPM_SHIFT_DAY:
-        return 1.0
-    ramp = min(1.0, (day_idx - CPM_SHIFT_DAY + 1) / CPM_SHIFT_RAMP)
-    return 1.0 + (CPM_SHIFT_MULT - 1.0) * ramp
-
-
-def build_ua_spend(rng: np.random.Generator) -> pd.DataFrame:
+def build_ua_spend(rng: np.random.Generator) -> tuple[pd.DataFrame, dict]:
     rows = []
+    fraud: dict[tuple, int] = {}
     for day_idx in range(N_DAYS):
         d = START_DATE + timedelta(days=day_idx)
-        shares = country_shares(day_idx)
+        shares = {c: p["share"] for c, p in COUNTRIES.items()}
+        unattributed_cp: dict[tuple[str, str], int] = {}
         paid_installs_cp: dict[tuple[str, str], int] = {}
         for channel, ch in CHANNELS.items():
             ch_budget = ch["budget"] * day_factor(d, rng)
@@ -165,13 +161,29 @@ def build_ua_spend(rng: np.random.Generator) -> pd.DataFrame:
                             target_cpi = cp["cpi"] * ch["cpi"] * PLATFORM_CPI_MULT[platform]
                             ctr = ch["ctr"] * ctr_m
                             # CPM is set so that a creative with average CTR hits the target CPI
-                            cpm = target_cpi * 1000 * ch["ctr"] * ch["cvr"] * cpm_multiplier(channel, day_idx)
+                            cpm = target_cpi * 1000 * ch["ctr"] * ch["cvr"]
                             cpm *= rng.lognormal(0, 0.05)
                             impressions = int(rng.poisson(spend / cpm * 1000))
-                            ctr_eff = ctr * ctr_multiplier(creative_id, day_idx) * rng.lognormal(0, 0.05)
+                            ctr_eff = ctr * rng.lognormal(0, 0.05)
                             clicks = int(rng.binomial(impressions, min(ctr_eff, 0.5)))
                             cvr = min(ch["cvr"] * rng.lognormal(0, 0.05), 0.95)
                             installs = int(rng.binomial(clicks, cvr))
+                            capture = outage_capture(channel, platform, day_idx)
+                            if capture < 1.0:
+                                kept = int(rng.binomial(installs, capture))
+                                unattributed_cp[(country, platform)] = (
+                                    unattributed_cp.get((country, platform), 0) + installs - kept)
+                                installs = kept
+                            fm = fraud_multiplier(campaign, day_idx)
+                            if fm:
+                                fake = int(rng.poisson(installs * fm))
+                                fake_clicks = int(rng.poisson(fake * FRAUD_CLICK_MULT))
+                                fake_clicks = max(fake_clicks, fake)
+                                clicks += fake_clicks
+                                impressions = max(impressions, clicks)
+                                installs += fake
+                                fk = (d, channel, campaign, country, platform)
+                                fraud[fk] = fraud.get(fk, 0) + fake
                             rows.append((d, channel, campaign, country, platform, creative_id,
                                          round(spend, 2), impressions, clicks, installs))
                             key = (country, platform)
@@ -182,37 +194,45 @@ def build_ua_spend(rng: np.random.Generator) -> pd.DataFrame:
                 base = cp["organic"] * (0.45 if platform == "iOS" else 0.55)
                 halo = 0.08 * paid_installs_cp[(country, platform)]
                 lam = (base + halo) * day_factor(d, rng)
-                installs = int(rng.poisson(max(lam, 0)))
+                installs = int(rng.poisson(max(lam, 0))) + unattributed_cp.get((country, platform), 0)
                 rows.append((d, "Organic", "organic", country, platform, "organic",
                              0.0, 0, 0, installs))
-    return pd.DataFrame(rows, columns=["date", "channel", "campaign", "country", "platform",
-                                       "creative_id", "spend", "impressions", "clicks", "installs"])
+    ua = pd.DataFrame(rows, columns=["date", "channel", "campaign", "country", "platform",
+                                     "creative_id", "spend", "impressions", "clicks", "installs"])
+    return ua, fraud
 
 
-def build_cohorts(ua: pd.DataFrame, rng: np.random.Generator) -> pd.DataFrame:
+def build_cohorts(ua: pd.DataFrame, fraud: dict, rng: np.random.Generator) -> pd.DataFrame:
     keys = ["date", "channel", "campaign", "country", "platform"]
     agg = ua.groupby(keys, as_index=False)["installs"].sum().rename(columns={"date": "install_date"})
 
     rows = []
     for r in agg.itertuples(index=False):
-        n = int(r.installs)
+        n_total = int(r.installs)
+        n_fake = fraud.get((r.install_date, r.channel, r.campaign, r.country, r.platform), 0)
+        n = n_total - n_fake
         cp = COUNTRIES[r.country]
         q = ORGANIC if r.channel == "Organic" else CHANNELS[r.channel]
         ret_m = cp["ret"] * q["ret"] * PLATFORM_RET_MULT[r.platform] * rng.lognormal(0, 0.03)
         p1 = min(BASE_D1 * ret_m, 0.9)
         p7 = min(BASE_D7 * ret_m, p1)
         p30 = min(BASE_D30 * ret_m, p7)
+        day_idx = (r.install_date - START_DATE).days
+        if r.platform == REGRESSION_PLATFORM and day_idx >= REGRESSION_START_DAY:
+            p1 *= REGRESSION_RET_MULT["d1"]
+            p7 = min(p7 * REGRESSION_RET_MULT["d7"], p1)
+            p30 = min(p30 * REGRESSION_RET_MULT["d30"], p7)
         d1 = int(rng.binomial(n, p1))
         d7 = int(rng.binomial(d1, p7 / p1)) if d1 else 0
         d30 = int(rng.binomial(d7, p30 / p7)) if d7 else 0
+        if n_fake:
+            f1 = int(rng.binomial(n_fake, FRAUD_D1))
+            f7 = int(rng.binomial(f1, 0.15)) if f1 else 0
+            d1, d7, d30 = d1 + f1, d7 + f7, d30
 
         payer_rate = cp["payer"] * q["pay"] * PLATFORM_PAYER_MULT[r.platform]
         arppu = cp["arppu"] * (1.15 if r.platform == "iOS" else 0.90)
         ad_arpu = cp["ad"] * (0.85 if r.platform == "iOS" else 1.15)
-        if r.country == LOW_VALUE_COUNTRY:
-            payer_rate *= LOW_VALUE_PAYER_MULT
-            arppu *= LOW_VALUE_ARPPU_MULT
-            ad_arpu *= LOW_VALUE_AD_MULT
         payers = int(rng.binomial(n, min(payer_rate, 1.0)))
         iap = sum(rng.gamma(2.0, arppu / 2.0, payers)) if payers else 0.0
         ads = n * ad_arpu * rng.lognormal(0, 0.08)
@@ -224,7 +244,7 @@ def build_cohorts(ua: pd.DataFrame, rng: np.random.Generator) -> pd.DataFrame:
 
         age = (END_DATE - r.install_date).days
         rows.append((
-            r.install_date, r.channel, r.campaign, r.country, r.platform, n,
+            r.install_date, r.channel, r.campaign, r.country, r.platform, n_total,
             d1 if age >= 1 else None,
             d7 if age >= 7 else None,
             d30 if age >= 30 else None,
@@ -255,6 +275,8 @@ def build_daily_kpis(ua: pd.DataFrame, rng: np.random.Generator) -> pd.DataFrame
         daily = (ua[ua.platform == platform].groupby("date")["installs"].sum()
                  .reindex([START_DATE + timedelta(days=i) for i in range(N_DAYS)], fill_value=0)
                  .to_numpy())
+        if platform == REGRESSION_PLATFORM:
+            daily = daily * np.where(np.arange(N_DAYS) >= REGRESSION_START_DAY, REGRESSION_RET_MULT["d7"], 1.0)
         new_users = np.convolve(daily, curve)[:N_DAYS]
         for i in range(N_DAYS):
             d = START_DATE + timedelta(days=i)
@@ -348,14 +370,14 @@ def validate(path: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--seed", type=int, default=20260916)
     parser.add_argument("--out", type=Path,
                         default=Path(__file__).resolve().parent.parent / "data" / "marketing.duckdb")
     args = parser.parse_args()
 
     rng = np.random.default_rng(args.seed)
-    ua = build_ua_spend(rng)
-    cohorts = build_cohorts(ua, rng)
+    ua, fraud = build_ua_spend(rng)
+    cohorts = build_cohorts(ua, fraud, rng)
     kpis = build_daily_kpis(ua, rng)
     write_db(args.out, ua, cohorts, kpis)
     print(f"Wrote {args.out}")

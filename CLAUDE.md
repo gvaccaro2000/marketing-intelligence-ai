@@ -74,7 +74,7 @@ NULL counts: D1 = 132 rows (1 day), D7 = 924 rows (7 days), D30 = 3,960 rows (30
 Revenue columns are cumulative (`revenue_d0 ≤ revenue_d7 ≤ revenue_d30`). Don't add them together.
 
 **Reconciliation:** `SUM(ua_spend.installs)` grouped to cohort grain equals `cohorts.installs`
-row-for-row (11,880/11,880 match; total 4,552,144 installs).
+row-for-row (11,880/11,880 match; total 4,485,121 installs).
 
 ### `daily_kpis` — game-wide daily KPIs (180 rows)
 
