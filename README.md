@@ -30,3 +30,8 @@ The data contains three hidden anomalies. Try to find them before you open
 
 `knowledge/` holds a synthetic company knowledge base for the same period: Slack threads
 (JSON) and Confluence-style wiki pages (Markdown). See `knowledge/README.md`.
+
+## Analytics agent
+
+`agent/` holds a LangChain agent (Claude plus tools) that answers questions using SQL on the
+database and hybrid RAG over `knowledge/`, with citations. See `agent/README.md`.
