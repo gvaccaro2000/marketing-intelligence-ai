@@ -1,0 +1,44 @@
+{
+  "id": "ua-team_2026-06-01_summer-flight-live",
+  "channel": "#ua-team",
+  "author": "Tomasz Wierzbicki",
+  "timestamp": "2026-06-01T08:12:00Z",
+  "messages": [
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-06-01T08:12:00Z",
+      "text": "Morning all :sunny: Summer flight is live. All 10 paid campaigns are delivering across US/UK/DE/JP/BR/FR on both platforms. Budgets are loaded at the June plan (~$51k/day blended). Please keep changes under 20%/day per campaign for the first week so the networks can settle.",
+      "reactions": [
+        ":rocket: 4",
+        ":dice: 2"
+      ]
+    }
+  ],
+  "replies": [
+    {
+      "author": "Priya Raman",
+      "role": "UA Manager (Meta, TikTok)",
+      "timestamp": "2026-06-01T08:20:00Z",
+      "text": "Meta + TikTok confirmed live. meta_aeo_purchase_t1 is still in learning on iOS, expect wobbly CPIs until ~50 purchase events."
+    },
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-06-01T08:34:00Z",
+      "text": "Google, AppLovin and Unity all spending. uac_tcpa_payers started a bit slow, I raised the tCPA by 10% to get it out of the gate."
+    },
+    {
+      "author": "Oscar Lindqvist",
+      "role": "Junior UA Analyst",
+      "timestamp": "2026-06-01T09:02:00Z",
+      "text": "I set up the daily pacing sheet, it pulls yesterday's spend by channel at 07:00 UTC. Shout if a column looks off."
+    },
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-06-01T09:05:00Z",
+      "text": "Thanks Oscar :pray:"
+    }
+  ]
+}

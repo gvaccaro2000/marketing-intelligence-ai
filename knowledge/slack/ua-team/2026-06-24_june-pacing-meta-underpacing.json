@@ -1,0 +1,28 @@
+{
+  "id": "ua-team_2026-06-24_june-pacing-meta-underpacing",
+  "channel": "#ua-team",
+  "author": "Oscar Lindqvist",
+  "timestamp": "2026-06-24T07:30:00Z",
+  "messages": [
+    {
+      "author": "Oscar Lindqvist",
+      "role": "Junior UA Analyst",
+      "timestamp": "2026-06-24T07:30:00Z",
+      "text": "Pacing check: June is at 96% of plan month-to-date. Meta is the main under-pacer (93%), everyone else is within 2%."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Priya Raman",
+      "role": "UA Manager (Meta, TikTok)",
+      "timestamp": "2026-06-24T07:48:00Z",
+      "text": "meta_broad_installs had a creative rejected on Friday (META-BRD-03, text overlay). Resubmitted, approved over the weekend. Should catch up this week."
+    },
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-06-24T08:02:00Z",
+      "text": "Fine. Don't force it, we'd rather under-spend than buy bad installs at month end."
+    }
+  ]
+}

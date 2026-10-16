@@ -1,0 +1,28 @@
+{
+  "id": "creative_2026-06-18_playable-v2",
+  "channel": "#creative",
+  "author": "Lucas Ferreira",
+  "timestamp": "2026-06-18T11:05:00Z",
+  "messages": [
+    {
+      "author": "Lucas Ferreira",
+      "role": "Motion Designer",
+      "timestamp": "2026-06-18T11:05:00Z",
+      "text": "Playable v2 (UNT-PLY-02 refresh) is built. Shorter tutorial, end card shows the kingdom map. File is 4.6 MB, under Unity's 5 MB limit."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-06-18T11:20:00Z",
+      "text": "Nice. Swapping it into unity_playable_installs tomorrow."
+    },
+    {
+      "author": "Hana Kobayashi",
+      "role": "Creative Lead",
+      "timestamp": "2026-06-18T11:22:00Z",
+      "text": "Remember to keep the old one live for the 7-day A/B window per the process doc."
+    }
+  ]
+}

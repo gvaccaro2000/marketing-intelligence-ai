@@ -1,0 +1,28 @@
+{
+  "id": "data-questions_2026-08-24_arpdau-trend",
+  "channel": "#data-questions",
+  "author": "Felix Brandt",
+  "timestamp": "2026-08-24T09:30:00Z",
+  "messages": [
+    {
+      "author": "Felix Brandt",
+      "role": "Product Manager, Android",
+      "timestamp": "2026-08-24T09:30:00Z",
+      "text": "Is Android ARPDAU affected by the 2.14.0 issue? Trying to size the revenue impact."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-08-24T09:55:00Z",
+      "text": "ARPDAU (revenue / DAU from daily_kpis, all users) is pretty stable on both platforms, iOS roughly 2x Android as usual. The impact is in volume: new Android cohorts retain worse, so Android DAU has been sliding faster than iOS since late July. Revenue follows DAU, not ARPDAU."
+    },
+    {
+      "author": "Felix Brandt",
+      "role": "Product Manager, Android",
+      "timestamp": "2026-08-24T10:02:00Z",
+      "text": "Makes sense, thanks. 2.15.0 is in QA, targeting Sep 3."
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "ua-team_2026-08-25_unity-makegood-update",
+  "channel": "#ua-team",
+  "author": "Daniel Esposito",
+  "timestamp": "2026-08-25T15:00:00Z",
+  "messages": [
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-08-25T15:00:00Z",
+      "text": "Unity update on unity_video_retarget: they agreed to credit part of the July spend as invalid traffic. The pattern hasn't stopped though: last week was still ~8% CTR, ~$0.50 CPI, and D1 around 15%. Spend has been flat at ~$2.7k/day the whole time."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-08-25T15:12:00Z",
+      "text": "Then we pause the campaign from Sep 1 and move its budget to unity_playable_installs, which is still clean (CPI ~$1.16, CTR 1.6%). I'll take it to #marketing-leads."
+    },
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-08-25T15:20:00Z",
+      "text": "Note for anyone reading the dashboards: the campaign's D7 ROAS looks normal because the fake installs add no revenue but also no spend. Payer conversion and D1 are where it shows."
+    }
+  ]
+}

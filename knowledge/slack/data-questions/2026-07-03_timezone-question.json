@@ -1,0 +1,22 @@
+{
+  "id": "data-questions_2026-07-03_timezone-question",
+  "channel": "#data-questions",
+  "author": "Oscar Lindqvist",
+  "timestamp": "2026-07-03T09:00:00Z",
+  "messages": [
+    {
+      "author": "Oscar Lindqvist",
+      "role": "Junior UA Analyst",
+      "timestamp": "2026-07-03T09:00:00Z",
+      "text": "Are dates in the warehouse UTC or local per country? Japan numbers look 'early' compared to the Meta UI."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Kwame Asante",
+      "role": "Analytics Engineer (MMP & pipelines)",
+      "timestamp": "2026-07-03T09:10:00Z",
+      "text": "All UTC. The Meta UI uses the ad account's time zone (Pacific), so day boundaries differ. Always use the warehouse for reporting."
+    }
+  ]
+}

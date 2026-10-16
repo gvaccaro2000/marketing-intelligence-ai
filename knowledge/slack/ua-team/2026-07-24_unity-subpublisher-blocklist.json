@@ -1,0 +1,40 @@
+{
+  "id": "ua-team_2026-07-24_unity-subpublisher-blocklist",
+  "channel": "#ua-team",
+  "author": "Daniel Esposito",
+  "timestamp": "2026-07-24T14:15:00Z",
+  "messages": [
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-07-24T14:15:00Z",
+      "text": "Unity came back with a sub-publisher breakdown. ~40 source app IDs drive most of the extra clicks. I submitted a blocklist for them on unity_video_retarget. unity_playable_installs looks clean, they don't overlap."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Oscar Lindqvist",
+      "role": "Junior UA Analyst",
+      "timestamp": "2026-07-24T14:22:00Z",
+      "text": "Want me to track daily CTR on the campaign to see if the blocklist works?"
+    },
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-07-24T14:25:00Z",
+      "text": "Yes please. If it worked, CTR should fall back toward ~1.6%."
+    },
+    {
+      "author": "Oscar Lindqvist",
+      "role": "Junior UA Analyst",
+      "timestamp": "2026-07-31T09:10:00Z",
+      "text": "One week after the blocklist: CTR still ~8%, CPI still ~$0.50, installs still ~5.5k/day. No visible change :confused:"
+    },
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-07-31T09:30:00Z",
+      "text": "The fraud is moving to new app IDs faster than we block them. Escalating to our Unity account manager."
+    }
+  ]
+}

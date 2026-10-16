@@ -1,0 +1,34 @@
+{
+  "id": "data-questions_2026-08-07_organic-android-spike",
+  "channel": "#data-questions",
+  "author": "Oscar Lindqvist",
+  "timestamp": "2026-08-07T08:15:00Z",
+  "messages": [
+    {
+      "author": "Oscar Lindqvist",
+      "role": "Junior UA Analyst",
+      "timestamp": "2026-08-07T08:15:00Z",
+      "text": "Organic Android installs doubled yesterday (8.2k vs ~4.0k). Did we get featured on the store or something?"
+    }
+  ],
+  "replies": [
+    {
+      "author": "Hana Kobayashi",
+      "role": "Creative Lead",
+      "timestamp": "2026-08-07T08:30:00Z",
+      "text": "Not that I know of, no featuring on the calendar."
+    },
+    {
+      "author": "Kwame Asante",
+      "role": "Analytics Engineer (MMP & pipelines)",
+      "timestamp": "2026-08-07T08:45:00Z",
+      "text": "Look at Google Android on the same day: installs dropped by roughly the same amount (~4.3k) while Google clicks stayed normal. Total Android installs are flat. So it's not new demand, it's Google installs losing attribution and falling into Organic. Following up in #ua-team."
+    },
+    {
+      "author": "Oscar Lindqvist",
+      "role": "Junior UA Analyst",
+      "timestamp": "2026-08-07T08:50:00Z",
+      "text": "Ahh, mirror image. Nice."
+    }
+  ]
+}

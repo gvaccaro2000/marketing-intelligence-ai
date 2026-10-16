@@ -1,0 +1,40 @@
+{
+  "id": "data-questions_2026-06-08_how-to-compute-d7-roas",
+  "channel": "#data-questions",
+  "author": "Oscar Lindqvist",
+  "timestamp": "2026-06-08T13:00:00Z",
+  "messages": [
+    {
+      "author": "Oscar Lindqvist",
+      "role": "Junior UA Analyst",
+      "timestamp": "2026-06-08T13:00:00Z",
+      "text": "How do I compute D7 ROAS for last week? I found a Confluence page that says SUM(revenue_d7) / SUM(spend) for the week, but my number comes out really low for the most recent days."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-06-08T13:12:00Z",
+      "text": "That page is the *old* definition (it's marked DEPRECATED at the top). Recent cohorts don't have D7 revenue yet (it's NULL), but their spend is still in the denominator, so the ratio is pushed down. Use *Metric Definitions (v3)*: only cohorts where revenue_d7 IS NOT NULL, and drop their spend too."
+    },
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-06-08T13:14:00Z",
+      "text": "Also aggregate ua_spend to cohort grain (drop creative_id) before joining to cohorts, otherwise every cohort row gets tripled."
+    },
+    {
+      "author": "Oscar Lindqvist",
+      "role": "Junior UA Analyst",
+      "timestamp": "2026-06-08T13:30:00Z",
+      "text": "Got it, way more sensible number now. Should someone delete the old page?"
+    },
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-06-08T13:35:00Z",
+      "text": "We keep it for history because old decks cite it, but it has the deprecation banner. If you see it linked anywhere new, swap the link."
+    }
+  ]
+}

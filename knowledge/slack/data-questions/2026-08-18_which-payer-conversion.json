@@ -1,0 +1,34 @@
+{
+  "id": "data-questions_2026-08-18_which-payer-conversion",
+  "channel": "#data-questions",
+  "author": "Marisol Okafor",
+  "timestamp": "2026-08-18T10:00:00Z",
+  "messages": [
+    {
+      "author": "Marisol Okafor",
+      "role": "CMO",
+      "timestamp": "2026-08-18T10:00:00Z",
+      "text": "Two decks quote 'payer conversion' as 2.1% and 1.7% for the same period. Which one is right?"
+    }
+  ],
+  "replies": [
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-08-18T10:20:00Z",
+      "text": "Both, they measure different things :sweat_smile: The ~2% is *cohort payer conversion D7*: share of installers who paid within 7 days (mature D7 cohorts, from cohorts.payers_d7). The ~1.7% is the *daily payer rate*: paying users / DAU, game-wide by platform from daily_kpis. Our default meaning of 'payer conversion' is the cohort D7 one."
+    },
+    {
+      "author": "Marisol Okafor",
+      "role": "CMO",
+      "timestamp": "2026-08-18T10:25:00Z",
+      "text": "Please make every deck say which one it is."
+    },
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-08-18T10:30:00Z",
+      "text": "Added a line to the weekly report template. Also heads-up: the *Marketing KPI Glossary* page in the Leads space still describes payer conversion as payers/DAU. *Metric Definitions (v3)* is the canonical one."
+    }
+  ]
+}

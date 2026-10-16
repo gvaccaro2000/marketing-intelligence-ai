@@ -1,0 +1,22 @@
+{
+  "id": "creative_2026-07-22_jp-localization",
+  "channel": "#creative",
+  "author": "Hana Kobayashi",
+  "timestamp": "2026-07-22T10:10:00Z",
+  "messages": [
+    {
+      "author": "Hana Kobayashi",
+      "role": "Creative Lead",
+      "timestamp": "2026-07-22T10:10:00Z",
+      "text": "JP-specific cut of the TikTok studio creatives is ready: illustrated style, local voice-over, no English text. JP has our best retention and payer rate so it's worth the effort."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Priya Raman",
+      "role": "UA Manager (Meta, TikTok)",
+      "timestamp": "2026-07-22T10:25:00Z",
+      "text": "Love it. I'll add them as a separate ad group in tiktok_value_bidding so we can compare cleanly."
+    }
+  ]
+}

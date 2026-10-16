@@ -1,0 +1,40 @@
+{
+  "id": "marketing-leads_2026-07-31_android-retention-escalation",
+  "channel": "#marketing-leads",
+  "author": "Ingrid Solberg",
+  "timestamp": "2026-07-31T10:00:00Z",
+  "messages": [
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-07-31T10:00:00Z",
+      "text": "Escalation: Android retention dropped for every install cohort from 2026-07-22 onwards. D1 ~36% -> ~30%, early D7 reads ~14% -> ~9.5%. Same drop in every channel and in Organic; iOS unchanged; CPI/CTR unchanged. Timing matches Android 2.14.0 (100% rollout evening of Jul 21). This is a product issue, not UA."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Felix Brandt",
+      "role": "Product Manager, Android",
+      "timestamp": "2026-07-31T10:30:00Z",
+      "text": "Confirmed from our side: the new asset-bundle loader in 2.14.0 adds ~9s to first load on low/mid-range Android devices and the new tutorial has a step where ~8% of users stall. We can't roll back because 2.14.0 also migrated the economy save format. Fix (2.15.0) is targeted for the first week of September."
+    },
+    {
+      "author": "Marisol Okafor",
+      "role": "CMO",
+      "timestamp": "2026-07-31T10:42:00Z",
+      "text": "Thanks both. Decisions: (1) no Android bid cuts on the networks, it isn't their traffic, (2) we expect Android ROAS to soften as D7/D30 mature, finance please adjust the Q3 forecast, (3) Felix, please post in here when 2.15.0 ships."
+    },
+    {
+      "author": "Chloe Nguyen",
+      "role": "Finance Business Partner, Marketing",
+      "timestamp": "2026-07-31T11:15:00Z",
+      "text": "Will rerun the Q3 forecast with lower Android D30."
+    },
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-07-31T11:20:00Z",
+      "text": "And for the record, my 'traffic quality' theory from Monday was wrong. Glad we didn't cut bids."
+    }
+  ]
+}

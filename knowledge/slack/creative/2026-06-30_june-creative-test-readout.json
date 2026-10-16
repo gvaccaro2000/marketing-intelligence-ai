@@ -1,0 +1,28 @@
+{
+  "id": "creative_2026-06-30_june-creative-test-readout",
+  "channel": "#creative",
+  "author": "Hana Kobayashi",
+  "timestamp": "2026-06-30T16:00:00Z",
+  "messages": [
+    {
+      "author": "Hana Kobayashi",
+      "role": "Creative Lead",
+      "timestamp": "2026-06-30T16:00:00Z",
+      "text": "June creative test readout (ua_spend has creative_id, so this is CPI/CTR/IPM only, cohort metrics can't be split by creative):\n- Meta broad: META-BRD-02 wins on IPM, keep scaling it\n- TikTok: UGC and studio creatives roughly tied\n- AppLovin: no clear winner\nFull deck in the Creative space."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-06-30T16:15:00Z",
+      "text": "Small caveat: the differences between creatives within a campaign are mostly within noise this month. I wouldn't kill anything on June data alone."
+    },
+    {
+      "author": "Hana Kobayashi",
+      "role": "Creative Lead",
+      "timestamp": "2026-06-30T16:18:00Z",
+      "text": "Agreed, nothing gets killed, we're just rotating in new variants."
+    }
+  ]
+}

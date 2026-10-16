@@ -1,0 +1,28 @@
+{
+  "id": "data-questions_2026-07-08_recent-retention-looks-low",
+  "channel": "#data-questions",
+  "author": "Chloe Nguyen",
+  "timestamp": "2026-07-08T14:00:00Z",
+  "messages": [
+    {
+      "author": "Chloe Nguyen",
+      "role": "Finance Business Partner, Marketing",
+      "timestamp": "2026-07-08T14:00:00Z",
+      "text": "Looking at D7 retention by week, the latest week is way lower than the rest. Should we be worried?"
+    }
+  ],
+  "replies": [
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-07-08T14:10:00Z",
+      "text": "Probably not, it's maturity. Cohorts from the last 7 days don't have d7_retained yet (NULL). If you do SUM(d7_retained)/SUM(installs) the NULL rows still add installs to the denominator. Filter installs to rows where d7_retained IS NOT NULL. Formula is on *Metric Definitions*."
+    },
+    {
+      "author": "Chloe Nguyen",
+      "role": "Finance Business Partner, Marketing",
+      "timestamp": "2026-07-08T14:25:00Z",
+      "text": "Fixed it, the latest week is in line now. Thanks!"
+    }
+  ]
+}

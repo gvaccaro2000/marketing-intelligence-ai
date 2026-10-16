@@ -1,0 +1,52 @@
+{
+  "id": "ua-team_2026-07-28_android-d1-drop-traffic-quality",
+  "channel": "#ua-team",
+  "author": "Tomasz Wierzbicki",
+  "timestamp": "2026-07-28T08:50:00Z",
+  "messages": [
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-07-28T08:50:00Z",
+      "text": "Android D1 for last week's cohorts is down to ~30% from ~36%. iOS looks fine. My guess is Android traffic quality from the networks is getting worse: AppLovin and Meta both pushed more Android inventory recently. Proposal: cut Android bids 15% on Meta, AppLovin and TikTok until it recovers."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Priya Raman",
+      "role": "UA Manager (Meta, TikTok)",
+      "timestamp": "2026-07-28T09:05:00Z",
+      "text": "Possible. Meta did tell us they're expanding automatic placements on Android. But CPI hasn't moved at all, which is weird if we're buying worse traffic."
+    },
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-07-28T09:12:00Z",
+      "text": "Same on AppLovin, CPI and CTR flat. If it were bad traffic I'd expect CTR or CVR to move."
+    },
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-07-28T09:20:00Z",
+      "text": "Fair point. Let's not touch bids until Ingrid has looked at it by channel."
+    },
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-07-29T15:30:00Z",
+      "text": "Correction to the traffic-quality theory (details in #data-questions): the Android D1 drop is the same size in *every* channel, including Organic (41.5% -> 34.0%). It starts sharply with the 2026-07-22 install cohort. iOS is flat. Organic users don't come from ad networks, so this can't be traffic quality. It lines up with Android app release 2.14.0, which went to 100% on the evening of Jul 21."
+    },
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-07-29T15:42:00Z",
+      "text": "That settles it, I was wrong. No bid cuts. Escalating to product. Thanks Ingrid :bow:"
+    },
+    {
+      "author": "Felix Brandt",
+      "role": "Product Manager, Android",
+      "timestamp": "2026-07-29T17:10:00Z",
+      "text": "Product here. 2.14.0 shipped the new first-session tutorial and a new asset-bundle loader. Looking at crash/ANR and tutorial funnel now."
+    }
+  ]
+}

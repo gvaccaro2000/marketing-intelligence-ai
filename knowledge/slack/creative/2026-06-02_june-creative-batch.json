@@ -1,0 +1,28 @@
+{
+  "id": "creative_2026-06-02_june-creative-batch",
+  "channel": "#creative",
+  "author": "Hana Kobayashi",
+  "timestamp": "2026-06-02T09:30:00Z",
+  "messages": [
+    {
+      "author": "Hana Kobayashi",
+      "role": "Creative Lead",
+      "timestamp": "2026-06-02T09:30:00Z",
+      "text": "June batch delivered :art: 30 creatives across the 10 campaigns, 3 each. Naming follows the convention on Confluence (*Creative Testing Process*): CHANNEL-CAMPAIGN-NN, e.g. META-AEO-01, GGL-TCPA-02, APL-ROAS-03."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Lucas Ferreira",
+      "role": "Motion Designer",
+      "timestamp": "2026-06-02T09:41:00Z",
+      "text": "Playables for Unity (UNT-PLY-01..03) are in the shared drive. v1 has the 'tap to roll' hook in the first 2 seconds."
+    },
+    {
+      "author": "Priya Raman",
+      "role": "UA Manager (Meta, TikTok)",
+      "timestamp": "2026-06-02T09:55:00Z",
+      "text": "Uploaded the Meta and TikTok sets. Thanks both!"
+    }
+  ]
+}

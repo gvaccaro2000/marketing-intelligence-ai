@@ -1,0 +1,34 @@
+{
+  "id": "marketing-leads_2026-06-05_june-budget-approval",
+  "channel": "#marketing-leads",
+  "author": "Tomasz Wierzbicki",
+  "timestamp": "2026-06-05T16:00:00Z",
+  "messages": [
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-06-05T16:00:00Z",
+      "text": "Asking for sign-off on the June UA budget: $1.55M total paid (about $51.5k/day), same channel split as May. Biggest single line is Meta at ~32%. BR stays at its usual share, it's cheap installs but low monetization."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Chloe Nguyen",
+      "role": "Finance Business Partner, Marketing",
+      "timestamp": "2026-06-05T16:20:00Z",
+      "text": "Within the H1 envelope. Finance OK."
+    },
+    {
+      "author": "Marisol Okafor",
+      "role": "CMO",
+      "timestamp": "2026-06-05T17:05:00Z",
+      "text": "Approved :white_check_mark: Please make sure the weekly report shows D7 ROAS on mature cohorts only, I don't want another quarter of us celebrating numbers that move once cohorts mature."
+    },
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-06-05T17:08:00Z",
+      "text": "Yes, that's the new definition. The old one is deprecated on Confluence."
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "marketing-leads_2026-08-28_september-budget-reallocation",
+  "channel": "#marketing-leads",
+  "author": "Tomasz Wierzbicki",
+  "timestamp": "2026-08-28T10:00:00Z",
+  "messages": [
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-08-28T10:00:00Z",
+      "text": "September proposals: (1) pause unity_video_retarget from Sep 1 (fraud still ongoing, partial credit from Unity for July), move its ~$2.7k/day to unity_playable_installs; (2) release the 3% holdback into AppLovin, best D7 ROAS on mature cohorts; (3) Android bids unchanged until 2.15.0 ships."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Chloe Nguyen",
+      "role": "Finance Business Partner, Marketing",
+      "timestamp": "2026-08-28T10:40:00Z",
+      "text": "Jul-Aug ran ~$54.7k/day, about 2% above the base plan pace, so releasing the holdback is fine as long as September stays at plan. Finance OK."
+    },
+    {
+      "author": "Marisol Okafor",
+      "role": "CMO",
+      "timestamp": "2026-08-28T11:05:00Z",
+      "text": "Approved all three."
+    }
+  ]
+}

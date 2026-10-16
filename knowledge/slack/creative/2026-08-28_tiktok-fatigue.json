@@ -1,0 +1,28 @@
+{
+  "id": "creative_2026-08-28_tiktok-fatigue",
+  "channel": "#creative",
+  "author": "Priya Raman",
+  "timestamp": "2026-08-28T14:30:00Z",
+  "messages": [
+    {
+      "author": "Priya Raman",
+      "role": "UA Manager (Meta, TikTok)",
+      "timestamp": "2026-08-28T14:30:00Z",
+      "text": "TikTok creative fatigue check: TT-UGC-01 CTR is down ~20% from its first two weeks. Others are holding. Can we get one or two fresh UGC pieces before Q4 stuff lands?"
+    }
+  ],
+  "replies": [
+    {
+      "author": "Hana Kobayashi",
+      "role": "Creative Lead",
+      "timestamp": "2026-08-28T14:45:00Z",
+      "text": "Yes, we have unused footage from the June shoot. Lucas can cut two new hooks next week."
+    },
+    {
+      "author": "Lucas Ferreira",
+      "role": "Motion Designer",
+      "timestamp": "2026-08-28T14:47:00Z",
+      "text": "On it for Wednesday."
+    }
+  ]
+}

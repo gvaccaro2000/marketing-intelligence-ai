@@ -1,0 +1,34 @@
+{
+  "id": "creative_2026-08-20_q4-holiday-brief",
+  "channel": "#creative",
+  "author": "Hana Kobayashi",
+  "timestamp": "2026-08-20T09:00:00Z",
+  "messages": [
+    {
+      "author": "Hana Kobayashi",
+      "role": "Creative Lead",
+      "timestamp": "2026-08-20T09:00:00Z",
+      "text": "Kickoff for the Q4 holiday creative brief. Theme: 'Winter Court'. Please drop requests for formats, hooks and markets in the thread by Aug 29."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Priya Raman",
+      "role": "UA Manager (Meta, TikTok)",
+      "timestamp": "2026-08-20T09:20:00Z",
+      "text": "Meta: 4:5 and 9:16 statics plus 15s video. TikTok: at least 6 UGC pieces, last year's holiday creatives fatigued in ~10 days."
+    },
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-08-20T09:31:00Z",
+      "text": "Unity: playables only, we're likely pausing the video retarget campaign. AppLovin: 30s video + playable."
+    },
+    {
+      "author": "Marisol Okafor",
+      "role": "CMO",
+      "timestamp": "2026-08-20T11:00:00Z",
+      "text": "Love the theme. Please keep the dice front and centre, brand tracking says people remember the dice, not the castle."
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "id": "ua-team_2026-06-16_applovin-roas-d7-target",
+  "channel": "#ua-team",
+  "author": "Daniel Esposito",
+  "timestamp": "2026-06-16T15:22:00Z",
+  "messages": [
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-06-16T15:22:00Z",
+      "text": "applovin_roas_d7 has been out of learning for a week. I'd like to lower the D7 ROAS target from 24% to 22% so it can scale into more inventory. CPI is ~$1.30 and it's our best D7 ROAS channel right now."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-06-16T15:40:00Z",
+      "text": "OK with 22%. What are we comparing against, are you using the new D7 ROAS definition (mature cohorts only, spend for the same cohorts)?"
+    },
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-06-16T15:44:00Z",
+      "text": "Yes, the one on the *Metric Definitions* page, not the old blended one."
+    },
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-06-16T15:58:00Z",
+      "text": "Confirming: AppLovin D7 ROAS on mature cohorts is the best of the five networks, Google is the lowest. Fine to loosen the target a bit."
+    },
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-06-16T16:01:00Z",
+      "text": "Approved. Change it tomorrow morning so we don't mix two targets in the same day."
+    }
+  ]
+}

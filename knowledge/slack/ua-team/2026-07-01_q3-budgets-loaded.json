@@ -1,0 +1,34 @@
+{
+  "id": "ua-team_2026-07-01_q3-budgets-loaded",
+  "channel": "#ua-team",
+  "author": "Tomasz Wierzbicki",
+  "timestamp": "2026-07-01T07:05:00Z",
+  "messages": [
+    {
+      "author": "Tomasz Wierzbicki",
+      "role": "Head of User Acquisition",
+      "timestamp": "2026-07-01T07:05:00Z",
+      "text": "Q3 budgets are loaded in all networks per the *Q3 2026 UA Budget Plan* (Confluence). July daily total is about +4% vs June (~$53.8k/day). Split stays Meta 32 / Google 24 / AppLovin 21 / TikTok 14 / Unity 10; the 3% holdback is not loaded."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Daniel Esposito",
+      "role": "UA Manager (Google, AppLovin, Unity)",
+      "timestamp": "2026-07-01T07:20:00Z",
+      "text": "Google, AppLovin, Unity updated :white_check_mark:"
+    },
+    {
+      "author": "Priya Raman",
+      "role": "UA Manager (Meta, TikTok)",
+      "timestamp": "2026-07-01T07:26:00Z",
+      "text": "Meta and TikTok updated :white_check_mark:"
+    },
+    {
+      "author": "Chloe Nguyen",
+      "role": "Finance Business Partner, Marketing",
+      "timestamp": "2026-07-01T09:40:00Z",
+      "text": "Thanks. Finance will reconcile network invoices against the warehouse spend on the 5th business day of each month as usual."
+    }
+  ]
+}

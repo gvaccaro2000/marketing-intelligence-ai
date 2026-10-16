@@ -1,0 +1,40 @@
+{
+  "id": "data-questions_2026-07-29_android-retention-by-channel",
+  "channel": "#data-questions",
+  "author": "Ingrid Solberg",
+  "timestamp": "2026-07-29T15:10:00Z",
+  "messages": [
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-07-29T15:10:00Z",
+      "text": "Re Tomasz's traffic-quality theory: Android D1 by channel, install cohorts before Jul 22 vs Jul 22-27 (D1-mature, excluding unity_video_retarget):\n- Meta 36.2% -> 29.6%\n- AppLovin 37.8% -> 31.4%\n- Organic 41.5% -> 34.0%\n- Google / TikTok / Unity playable: same ~6pt drop\niOS: 39.9% -> 40.1%, flat.\nThe step is on one day, on one platform, in every source including Organic. Ad networks don't touch Organic users, so this is the app, not the traffic."
+    }
+  ],
+  "replies": [
+    {
+      "author": "Felix Brandt",
+      "role": "Product Manager, Android",
+      "timestamp": "2026-07-29T15:25:00Z",
+      "text": "Android 2.14.0 hit 100% rollout at ~19:00 UTC on Jul 21. That would make Jul 22 the first full cohort on the new build."
+    },
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-07-29T15:27:00Z",
+      "text": "That matches exactly, the Jul 21 cohort itself still looks normal."
+    },
+    {
+      "author": "Oscar Lindqvist",
+      "role": "Junior UA Analyst",
+      "timestamp": "2026-07-29T15:40:00Z",
+      "text": "Is DAU showing it too?"
+    },
+    {
+      "author": "Ingrid Solberg",
+      "role": "Senior Data Analyst",
+      "timestamp": "2026-07-29T15:52:00Z",
+      "text": "Not obviously yet, daily_kpis is game-wide and dominated by the existing user base. Should show up as Android DAU sliding faster than iOS over the next weeks."
+    }
+  ]
+}
