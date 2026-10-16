@@ -20,6 +20,7 @@ so the script can check that breakdown rows sum to the total.
 | `paid_cohort_quality.sql` | D1/D7 retention, D7 payer conversion, ROAS D0/D7 (paid, mature cohorts only) |
 | `organic_installs.sql` | Organic installs per week (context only) |
 | `game_kpis.sql` | DAU, revenue, ARPDAU, daily payer rate from `daily_kpis` |
+| `structural_weekly.sql` | Weekly paid spend, installs and mature D7/D30 revenue + spend by channel, country and total over the report week + 7 prior weeks (structural issues) |
 | `check_reconcile.sql` | `ua_spend` → cohort grain vs `cohorts`: rows, installs, spend through the join |
 | `check_nulls.sql` | Unexpected NULLs / maturity violations / impossible values |
 | `check_outliers.sql` | Channel-day spend, installs, CPI vs trailing-28-day baseline (robust z-score) |
