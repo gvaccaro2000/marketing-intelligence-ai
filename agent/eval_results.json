@@ -1,0 +1,404 @@
+[
+  {
+    "id": "q01",
+    "type": "sql",
+    "topic": "unity",
+    "question": "Compare CPI and CTR for the unity_video_retarget campaign between 2026-07-01..2026-07-08 and 2026-07-09..2026-07-31.",
+    "answer": "**CPI fell about 54% and CTR rose about 4.7× after 2026-07-09. The change comes from invalid traffic, not better performance.** Don't read the later period as an improvement or use it as a benchmark.\n\n| unity_video_retarget (activity dates) | CPI | CTR |\n|---|---|---|\n| 2026-07-01 → 07-08 | $1.16 | 1.60% |\n| 2026-07-09 → 07-31 | $0.53 | 7.50% |\n\n- **Inputs [SQL]:** Spend was $20.5k in the first window and $62.2k in the second. Installs were 17,752 and 117,985. Clicks were 52,316 and 736,683. Impressions were 3.26M and 9.82M. Organic is excluded, and CPI and CTR are calculated from summed components.\n- **Spend per day:** It stayed roughly flat, at about $2.56k/day before and about $2.7k/day after. The CPI drop therefore comes from reported installs more than doubling, not from lower spend. The Slack figures are quoted: [Slack #data-questions 2026-07-16], [Slack #ua-team 2026-08-25].\n- **Cause:** The Unity channel notes say the campaign has had large volumes of invalid clicks and installs since 2026-07-09, ramping over about 5 days. They say the extra installs don't retain or pay. [Confluence: Channel Notes — Unity]\n- **Quoted retention evidence:** Click-to-install conversion was about 34% before and about 16% after. D1 retention was about 34% before and about 15% after. [Slack #data-questions 2026-07-16] I did not check these two against the database.\n- **Attribution data:** The raw attributed installs stay in the warehouse. The stricter click-flooding rule only rejects new installs and doesn't rewrite history. [Slack #ua-team 2026-07-17]\n- **Benchmarks:** The Head of UA asked that this campaign be left out of CPI benchmarks and footnoted in reports. [Slack #ua-team 2026-07-17]\n- **Next steps:** Unity agreed to credit part of July as invalid traffic, and the campaign is to be paused from 2026-09-01. [Slack #ua-team 2026-08-25] The credit isn't reflected in these spend figures. I haven't checked that.\n\nThe second window spans the ramp-up (about 07-09 to 07-13), so it mixes transition days with fully invalid days. The overall conclusion doesn't change.",
+    "sql": [
+      {
+        "query": "SELECT CASE WHEN date<='2026-07-08' THEN 'a' ELSE 'b' END p, MIN(date) d0, MAX(date) d1, SUM(spend) spend, SUM(installs) installs, SUM(clicks) clicks, SUM(impressions) imps, SUM(spend)*1.0/NULLIF(SUM(installs),0) cpi, SUM(clicks)*1.0/NULLIF(SUM(impressions),0) ctr FROM ua_spend WHERE campaign='unity_video_retarget' AND channel<>'Organic' AND date BETWEEN '2026-07-01' AND '2026-07-31' GROUP BY 1 ORDER BY 1",
+        "rows": 2,
+        "truncated": false,
+        "error": null
+      }
+    ],
+    "retrieved": [
+      "knowledge/confluence/channel-notes-unity.md",
+      "knowledge/slack/data-questions/2026-07-16_unity-video-retarget-analysis.json",
+      "knowledge/slack/ua-team/2026-07-17_unity-fraud-ticket.json",
+      "knowledge/slack/ua-team/2026-07-14_unity-video-retarget-cpi-drop.json",
+      "knowledge/slack/ua-team/2026-08-25_unity-makegood-update.json"
+    ],
+    "tool_calls": 3,
+    "cost_usd": 0.0172,
+    "seconds": 10.9,
+    "facts_ok": true,
+    "facts_hit": "4/4",
+    "must_not_hits": [],
+    "retrieval_hit": null,
+    "citation_present": null,
+    "citations_valid": true,
+    "invalid_citations": [],
+    "forbidden_doc_cited": null,
+    "judge": {
+      "verdict": "pass",
+      "reason": "The answer's CPI ($1.16 vs $0.53), CTR (1.60% vs 7.50%), installs (17,752 vs 117,985) and roughly flat daily spend all match the reference, and the added context about invalid traffic contains no evident false claims."
+    },
+    "correct": true
+  },
+  {
+    "id": "q02",
+    "type": "sql",
+    "topic": "google",
+    "question": "How many installs did Google record on Android each day from 2026-08-05 to 2026-08-10, and what was the CPI each day?",
+    "answer": "Google Android installs and CPI for 2026-08-05 to 2026-08-10 (activity dates) are below. Aug 6–9 are wrong because of a tracking outage, so don't use them as real performance.\n\n| Date | Installs | Spend | CPI |\n|---|---|---|---|\n| 08-05 | 4,316 | $5,586 | $1.29 |\n| 08-06 | 282 | $6,029 | $21.38 |\n| 08-07 | 244 | $5,955 | $24.41 |\n| 08-08 | 298 | $6,509 | $21.84 |\n| 08-09 | 294 | $6,277 | $21.35 |\n| 08-10 | 4,490 | $5,992 | $1.33 |\n\nAll figures are [SQL]: Google, Android, paid only. CPI is spend divided by installs.\n\n- **The outage:** Aug 6–9 is the window in which most Google Android installs were credited to Organic Android instead of Google. A credential rotation on the evening of Aug 5 left the Android Google link in the attribution tool (Attributa) unauthenticated [Slack #ua-team 2026-08-07]. The final post-mortem gives the same window, with only about 6% of installs attributed to Google [Confluence: Post-mortem: Google Android attribution outage (2026-08-06 → 2026-08-09)].\n- **Spend and clicks were normal:** The installs still happened, but they were recorded as Organic. The post-mortem estimates about 17k Google Android installs were counted as Organic [Confluence: Post-mortem: Google Android attribution outage (2026-08-06 → 2026-08-09)].\n- **Can't be fixed:** The post-mortem says the data cannot be restated, so the warehouse keeps the misattribution permanently [Confluence: Post-mortem: Google Android attribution outage (2026-08-06 → 2026-08-09)]. I can't give corrected installs or CPI for those days.\n- **Team decision:** Google Android CPI and ROAS for these days should be ignored [Slack #marketing-leads 2026-08-08].\n- **Normal days:** Aug 5 and Aug 10 look normal, at about $1.3 CPI. That matches the post-mortem's \"normal day\" figures (about 4.5k installs, about $1.28 CPI), which are quoted figures. The database numbers above are what I'm relying on.",
+    "sql": [
+      {
+        "query": "SELECT date, SUM(installs) installs, SUM(spend) spend, SUM(spend)*1.0/NULLIF(SUM(installs),0) cpi FROM ua_spend WHERE channel='Google' AND platform='Android' AND date BETWEEN '2026-08-05' AND '2026-08-10' GROUP BY date ORDER BY date",
+        "rows": 6,
+        "truncated": false,
+        "error": null
+      }
+    ],
+    "retrieved": [
+      "knowledge/confluence/postmortem-2026-08-google-android-attribution.md",
+      "knowledge/confluence/android-release-log.md",
+      "knowledge/slack/ua-team/2026-08-07_google-android-installs-collapse.json",
+      "knowledge/slack/marketing-leads/2026-08-08_google-android-outage-update.json"
+    ],
+    "tool_calls": 4,
+    "cost_usd": 0.0149,
+    "seconds": 10.0,
+    "facts_ok": true,
+    "facts_hit": "8/8",
+    "must_not_hits": [],
+    "retrieval_hit": null,
+    "citation_present": null,
+    "citations_valid": true,
+    "invalid_citations": [],
+    "forbidden_doc_cited": null,
+    "judge": {
+      "verdict": "pass",
+      "reason": "All installs and CPI values for each day match the reference exactly, and the added outage context about Aug 6–9 is a caveat rather than a materially false claim."
+    },
+    "correct": true
+  },
+  {
+    "id": "q03",
+    "type": "sql",
+    "topic": "android",
+    "question": "What was D1 retention on Android and on iOS (all channels incl. Organic) for install cohorts 2026-07-08..2026-07-21 versus 2026-07-22..2026-08-04?",
+    "answer": "Android D1 retention fell sharply between the two windows, from 34.4% to 28.0% (−6.4 points). iOS was roughly flat, going from 37.9% to 37.4% (−0.5 points).\n\nD1 retention, all channels including Organic, for D1-mature install cohorts [SQL]:\n\n| Platform | 2026-07-08..07-21 | 2026-07-22..08-04 | Change |\n|---|---|---|---|\n| Android | 34.38% (128,954 / 375,122) | 27.96% (109,776 / 392,550) | −6.4 pts |\n| iOS | 37.93% (125,375 / 330,521) | 37.43% (126,926 / 339,109) | −0.5 pts |\n\n- Both windows are fully D1-mature, because D1 data is available for installs up to 2026-08-28. Each window has 924 cohort rows per platform.\n- I calculated retention as retained users divided by installs, summed across cohorts, following the CLAUDE.md definition.\n- I didn't look into why Android dropped. I can search Slack and Confluence for a cause, or split the drop by channel, country or campaign, if you want.",
+    "sql": [
+      {
+        "query": "SELECT platform, CASE WHEN install_date<='2026-07-21' THEN 'A 07-08..07-21' ELSE 'B 07-22..08-04' END p, SUM(d1_retained) r, SUM(installs) FILTER (WHERE d1_retained IS NOT NULL) i, SUM(d1_retained)*1.0/NULLIF(SUM(installs) FILTER (WHERE d1_retained IS NOT NULL),0) d1, COUNT(*) n FROM cohorts WHERE install_date BETWEEN '2026-07-08' AND '2026-08-04' GROUP BY ALL ORDER BY 1,2",
+        "rows": 4,
+        "truncated": false,
+        "error": null
+      }
+    ],
+    "retrieved": [],
+    "tool_calls": 2,
+    "cost_usd": 0.0182,
+    "seconds": 7.7,
+    "facts_ok": true,
+    "facts_hit": "4/4",
+    "must_not_hits": [],
+    "retrieval_hit": null,
+    "citation_present": null,
+    "citations_valid": null,
+    "invalid_citations": [],
+    "forbidden_doc_cited": null,
+    "judge": {
+      "verdict": "pass",
+      "reason": "The answer's Android (34.4% to 28.0%, -6.4 pts) and iOS (37.9% to 37.4%, roughly flat) figures match the reference, and the extra detail it adds contains no false claims."
+    },
+    "correct": true
+  },
+  {
+    "id": "q04",
+    "type": "kb",
+    "topic": "unity",
+    "question": "What did marketing leadership decide about scaling unity_video_retarget in July 2026, and why didn't they pause it?",
+    "answer": "**Decision:** Marketing leadership did not scale unity_video_retarget and did not pause it. On 2026-07-17 they approved four actions: no budget increase, a fraud ticket with Unity plus a stricter Attributa Protect rule, exclusion from CPI benchmarks and install KPIs, and a request for makegoods [Slack #marketing-leads 2026-07-17].\n\n**Why they didn't pause it:**\n- Head of UA Tomasz Wierzbicki said campaign revenue hadn't changed, so the real users were still there and D7 ROAS was flat. He said pausing would lose those users. His fallback: \"If Unity can't clean it up we pause.\" The CMO approved [Slack #marketing-leads 2026-07-17].\n- The +50% increase was proposed on 2026-07-14 because CPI fell from about $1.15 to $0.48 and installs rose from 2.2k to 5.8k a day. It was held, and the 2026-07-16 analysis blocked it [Slack #ua-team 2026-07-14]. That analysis found CTR up from 1.6% to about 8%, click-to-install CVR halved, and D1 retention of new cohorts at about 15% against about 34% before. Spend was unchanged, and it pointed to click spam or install fraud [Slack #ua-team 2026-07-14].\n- Budget was kept flat, and the stricter rule applies only to new installs. The warehouse still keeps the raw attributed installs, so dashboards still show the inflated numbers [Slack #ua-team 2026-07-17].\n\n**Later outcome:**\n- The pause was only a fallback, and it was later triggered. Unity credited part of July spend, but the pattern continued: about 8% CTR, about $0.50 CPI and about 15% D1 [Slack #ua-team 2026-08-25].\n- Wierzbicki proposed pausing from 2026-09-01 and moving the budget to unity_playable_installs. He planned to take it to #marketing-leads [Slack #ua-team 2026-08-25]. The Unity channel page lists the pause as planned, but I found no recorded leadership approval [Confluence: Channel Notes — Unity].\n\nI did not run SQL for this question. The figures above are quoted from the threads and not checked against the database.",
+    "sql": [],
+    "retrieved": [
+      "knowledge/slack/marketing-leads/2026-07-17_unity-scaling-decision.json",
+      "knowledge/slack/ua-team/2026-07-17_unity-fraud-ticket.json",
+      "knowledge/confluence/channel-notes-unity.md",
+      "knowledge/slack/creative/2026-07-15_unity-video-creative-check.json",
+      "knowledge/slack/ua-team/2026-07-14_unity-video-retarget-cpi-drop.json",
+      "knowledge/slack/ua-team/2026-08-25_unity-makegood-update.json"
+    ],
+    "tool_calls": 2,
+    "cost_usd": 0.0111,
+    "seconds": 8.8,
+    "facts_ok": true,
+    "facts_hit": "3/3",
+    "must_not_hits": [],
+    "retrieval_hit": true,
+    "citation_present": true,
+    "citations_valid": true,
+    "invalid_citations": [],
+    "forbidden_doc_cited": null,
+    "judge": {
+      "verdict": "pass",
+      "reason": "The answer matches the reference on the decision (no budget increase, fraud ticket with a stricter Attributa Protect rule, exclusion from CPI/install KPIs, makegoods, approved by CMO on 2026-07-17) and on the reason it wasn't paused (revenue unchanged, real users still there, D7 ROAS flat, pause only if Unity can't clean it up). The extra later-outcome detail is sourced to threads and doesn't contradict the reference."
+    },
+    "correct": true
+  },
+  {
+    "id": "q05",
+    "type": "kb",
+    "topic": "google",
+    "question": "What was the root cause of the Google Android attribution outage, and can the affected days be restated in our tables?",
+    "answer": "**Root cause:** The credential rotation on 2026-08-05 left the Android link between the MMP (Attributa) and Google with a stale token. **No, the affected days can't be restated.** Attributa said failed postbacks can't be re-attributed, so the tables will keep those installs as Organic.\n\n- **What broke:** A rotation script updated a shared secret store. The iOS link refreshed on its next sync. The Android link kept a cached token that expired, and the MMP silently fell back to organic attribution instead of raising an error [Confluence: Post-mortem: Google Android attribution outage (2026-08-06 → 2026-08-09)].\n- **Effect:** Only about 6% of Google Android installs were credited to Google on 2026-08-06 → 08-09. The rest were recorded as Organic Android. Google iOS and the other networks weren't affected [Confluence: Post-mortem: Google Android attribution outage (2026-08-06 → 2026-08-09)].\n- **Delivery was normal:** Spend and clicks stayed flat, so this was a measurement problem and not a delivery problem [Slack #marketing-leads 2026-08-08].\n- **Fix:** The re-linked integration went live late on 2026-08-09, and attribution recovered on 2026-08-10 [Slack #ua-team 2026-08-10].\n- **Restatement:** Attributa was asked and said no. The tables will keep showing those installs as Organic [Slack #ua-team 2026-08-10]. The post-mortem and the Head of UA say the same, so Organic Android stays inflated permanently [Slack #marketing-leads 2026-08-14].\n- **Database check:** The tables still show the misattribution, for Android only, 2026-08-04 → 08-11 [SQL]:\n\n| Period | Google installs/day | Google CPI | Organic installs/day |\n|---|---|---|---|\n| 08-04 and 08-05 | 4,316–4,610 | $1.26–1.29 | ~4.0–4.1k |\n| 08-06 → 08-09 | 244–298 | $21.35–24.41 | 8,170–9,302 |\n| 08-10 | 4,490 | $1.33 | 4,109 |\n\n- **Handling:** Don't restate. Exclude Google Android 08-06 → 08-09 from CPI/ROAS trend reads and benchmarks. The reporting template does this, and the dashboards are annotated [Confluence: Post-mortem: Google Android attribution outage (2026-08-06 → 2026-08-09)].\n\nThe database matches the post-mortem and Slack figures, so I found no conflict between sources. The ~17k misattributed installs is a quoted figure from Slack and the post-mortem. I didn't recompute it.",
+    "sql": [
+      {
+        "query": "SELECT date, SUM(installs) FILTER (WHERE channel='Google') AS google_installs, SUM(spend) FILTER (WHERE channel='Google') AS google_spend, SUM(spend) FILTER (WHERE channel='Google')*1.0/NULLIF(SUM(installs) FILTER (WHERE channel='Google'),0) AS google_cpi, SUM(installs) FILTER (WHERE channel='Organic') AS organic_installs FROM ua_spend WHERE platform='Android' AND date BETWEEN '2026-08-04' AND '2026-08-11' GROUP BY date ORDER BY date",
+        "rows": 8,
+        "truncated": false,
+        "error": null
+      }
+    ],
+    "retrieved": [
+      "knowledge/confluence/postmortem-2026-08-google-android-attribution.md",
+      "knowledge/slack/ua-team/2026-08-10_google-android-recovered.json",
+      "knowledge/slack/marketing-leads/2026-08-14_postmortem-review.json",
+      "knowledge/slack/marketing-leads/2026-08-08_google-android-outage-update.json",
+      "knowledge/slack/data-questions/2026-08-11_dashboard-annotation-request.json"
+    ],
+    "tool_calls": 4,
+    "cost_usd": 0.0369,
+    "seconds": 12.1,
+    "facts_ok": true,
+    "facts_hit": "2/2",
+    "must_not_hits": [],
+    "retrieval_hit": true,
+    "citation_present": true,
+    "citations_valid": true,
+    "invalid_citations": [],
+    "forbidden_doc_cited": null,
+    "judge": {
+      "verdict": "pass",
+      "reason": "The answer matches the reference on the root cause (the 2026-08-05 credential rotation, a cached Android token that expired, and the MMP's silent fallback to Organic, with iOS unaffected) and on the conclusion that Aug 6-9 cannot be restated because failed postbacks can't be re-attributed, so Organic Android stays inflated; the extra detail it adds does not contradict the reference."
+    },
+    "correct": true
+  },
+  {
+    "id": "q06",
+    "type": "kb",
+    "topic": "unity",
+    "question": "What was approved for September 2026 regarding unity_video_retarget and Android bids?",
+    "answer": "For September 2026, the CMO approved pausing `unity_video_retarget` and leaving Android bids unchanged. The approval came on 2026-08-28 in #marketing-leads. [Slack #marketing-leads 2026-08-28]\n\n- **`unity_video_retarget`:** Pause it from Sep 1. Its budget of about $2.7k/day moves to `unity_playable_installs`. The reasons given were ongoing fraud and partial credit from Unity for July. [Slack #marketing-leads 2026-08-28]\n- **Android bids:** They stay unchanged until version 2.15.0 ships. [Slack #marketing-leads 2026-08-28]\n- **Other items in the same thread:** Marisol Okafor (CMO) approved all three proposals. The third was releasing the 3% holdback into AppLovin. Finance (Chloe Nguyen) was fine with this as long as September stays at plan. [Slack #marketing-leads 2026-08-28]\n- **Confirmation:** The Unity channel page also says the campaign will be paused from 2026-09-01. It says the budget moves to `unity_playable_installs`. It also says the campaign has had invalid traffic since 2026-07-09. [Confluence: Channel Notes — Unity]\n- **Earlier decision:** On 2026-07-17 the campaign was kept running with no budget increase. The plan then was to pause it if Unity could not clean up the traffic. [Slack #marketing-leads 2026-07-17] The 2026-08-28 approval replaces that plan.\n\nI didn't run a database query, because this question is about a decision and not a metric. The $2.7k/day figure is quoted from Slack.",
+    "sql": [],
+    "retrieved": [
+      "knowledge/slack/marketing-leads/2026-08-28_september-budget-reallocation.json",
+      "knowledge/confluence/channel-notes-unity.md",
+      "knowledge/slack/ua-team/2026-07-17_unity-fraud-ticket.json",
+      "knowledge/slack/marketing-leads/2026-07-17_unity-scaling-decision.json",
+      "knowledge/slack/data-questions/2026-07-16_unity-video-retarget-analysis.json"
+    ],
+    "tool_calls": 1,
+    "cost_usd": 0.0126,
+    "seconds": 6.4,
+    "facts_ok": true,
+    "facts_hit": "3/3",
+    "must_not_hits": [],
+    "retrieval_hit": true,
+    "citation_present": true,
+    "citations_valid": true,
+    "invalid_citations": [],
+    "forbidden_doc_cited": null,
+    "judge": {
+      "verdict": "pass",
+      "reason": "The answer matches the reference on every key fact: pause from Sep 1, ~$2.7k/day moved to unity_playable_installs, Android bids unchanged until 2.15.0, approved 2026-08-28 by Marisol, and the 3% AppLovin holdback release. The extra detail does not contradict the reference."
+    },
+    "correct": true
+  },
+  {
+    "id": "q07",
+    "type": "both",
+    "topic": "android",
+    "question": "Why did Android D1 retention drop in late July 2026? Was it ad-network traffic quality, as was suggested at first?",
+    "answer": "**Short answer:** No, it wasn't ad-network traffic quality. The drop came from the Android 2.14.0 app release. It reached 100% rollout around 19:00 UTC on Jul 21, so Jul 22 was the first full cohort on the new build. Tomasz, who proposed the traffic-quality theory, later said it was wrong [Slack #marketing-leads 2026-07-31].\n\n**Evidence from the database** (D1-mature install cohorts, Jul 1–27, excluding `unity_video_retarget`, as Ingrid did):\n- **Step change on one day.** Android D1 was about 34% on Jul 17–21, then 27.4% on Jul 22 and 27–29% on each day through Jul 27 [SQL]. This all-source daily series includes `unity_video_retarget`.\n- **Paid Android:** D1 fell from 35.2% to 28.7% [SQL].\n- **Organic Android:** D1 fell from 41.2% to 34.5% [SQL]. Ad networks don't deliver Organic users, so traffic quality can't explain a drop there.\n- **iOS was flat.** Paid iOS D1 was 38.8% before and 39.0% after. Organic iOS was 45.3% before and 45.2% after [SQL].\n- **Traffic metrics didn't worsen.** Android paid CPI was $1.08 before and $1.04 after. CTR was 1.68% before and 1.83% after [SQL]. The UA managers made the same point when the theory was first raised [Slack #ua-team 2026-07-28].\n\n**Cause, from the product side:**\n- Product says 2.14.0 added a new asset-bundle loader. It adds about 9s to first load on low and mid-range devices. The new tutorial also has a step where about 8% of new users stall [Slack #marketing-leads 2026-07-31].\n- The release log gives the same known issue, with D1 down about 6 points from the Jul 22 cohort [Confluence: Android Release Log — 2026]. This matches the drop I measured in the database.\n- iOS 2.14.0 shipped only the economy migration, not the new tutorial or loader. That fits iOS being unaffected [Confluence: Android Release Log — 2026].\n\n**Decisions and status:**\n- No Android bid cuts were made [Slack #marketing-leads 2026-07-31].\n- Rollback isn't possible because 2.14.0 migrated the economy save format. Release 2.15.0 has a loader fix and a tutorial redesign. It is targeted for 2026-09-03 and was in QA at the last update [Confluence: Android Release Log — 2026].\n- Release 2.14.1 (Aug 4) does not fix the problem [Confluence: Android Release Log — 2026].\n\n**Caveat:** I only checked D1, which is mature through Jul 28. I didn't verify the later D7/D30 effects. Slack's early D7 figures (about 14% to 9.5%) are quoted, not checked against the database [Slack #marketing-leads 2026-07-31].",
+    "sql": [
+      {
+        "query": "SELECT platform, CASE WHEN channel='Organic' THEN 'Organic' ELSE 'Paid' END AS src, install_date>=DATE '2026-07-22' AS post,\nSUM(d1_retained)*1.0/NULLIF(SUM(installs) FILTER (WHERE d1_retained IS NOT NULL),0) d1,\nSUM(installs) FILTER (WHERE d1_retained IS NOT NULL) inst\nFROM cohorts WHERE install_date BETWEEN DATE '2026-07-01' AND DATE '2026-07-27' AND NOT (campaign='unity_video_retarget')\nGROUP BY ALL ORDER BY 1,2,3",
+        "rows": 8,
+        "truncated": false,
+        "error": null
+      },
+      {
+        "query": "SELECT install_date, SUM(d1_retained)*1.0/NULLIF(SUM(installs),0) d1 FROM cohorts WHERE platform='Android' AND install_date BETWEEN DATE '2026-07-17' AND DATE '2026-07-27' GROUP BY 1 ORDER BY 1",
+        "rows": 11,
+        "truncated": false,
+        "error": null
+      },
+      {
+        "query": "SELECT date>=DATE '2026-07-22' AS post, SUM(spend)*1.0/NULLIF(SUM(installs),0) cpi, SUM(clicks)*1.0/NULLIF(SUM(impressions),0) ctr FROM ua_spend WHERE channel<>'Organic' AND platform='Android' AND date BETWEEN DATE '2026-07-01' AND DATE '2026-07-27' GROUP BY 1 ORDER BY 1",
+        "rows": 2,
+        "truncated": false,
+        "error": null
+      }
+    ],
+    "retrieved": [
+      "knowledge/slack/data-questions/2026-07-29_android-retention-by-channel.json",
+      "knowledge/slack/marketing-leads/2026-07-31_android-retention-escalation.json",
+      "knowledge/slack/ua-team/2026-07-28_android-d1-drop-traffic-quality.json",
+      "knowledge/confluence/postmortem-2026-08-google-android-attribution.md",
+      "knowledge/confluence/android-release-log.md"
+    ],
+    "tool_calls": 5,
+    "cost_usd": 0.0243,
+    "seconds": 14.2,
+    "facts_ok": true,
+    "facts_hit": "3/3",
+    "must_not_hits": [],
+    "retrieval_hit": true,
+    "citation_present": true,
+    "citations_valid": true,
+    "invalid_citations": [],
+    "forbidden_doc_cited": null,
+    "judge": {
+      "verdict": "pass",
+      "reason": "The answer concludes it was not traffic quality, attributes the drop to Android 2.14.0 (100% rollout ~19:00 UTC Jul 21, first affected cohort Jul 22, +9s asset loader load, ~8% tutorial stall), shows Organic and paid dropping equally with iOS flat, about 34% to 28%, notes no bid cuts and the 2.15.0 fix targeted for early Sep, and contains no material contradictions."
+    },
+    "correct": true
+  },
+  {
+    "id": "q08",
+    "type": "both",
+    "topic": "unity",
+    "question": "Why did unity_video_retarget's CPI fall so sharply in July 2026, and should we trust its installs?",
+    "answer": "**Short answer:** The CPI drop is not real efficiency. It looks like invalid traffic (click spam or install fraud) that started around 2026-07-09. Don't trust this campaign's installs, and don't use its CPI as a benchmark.\n\n**What the data shows** (Unity campaigns, spend and install dates 2026-06-01 → 2026-08-29; D1 uses cohorts through 08-28; installs reconcile to cohorts for every slice) [SQL]:\n- **CPI:** $1.15 before (Jun 1–Jul 8), $0.66 during the ramp (Jul 9–13), and $0.50 after (Jul 14–Aug 29).\n- **Spend:** roughly flat, about $2.56k/day before and $2.78k/day after.\n- **Installs:** about 2.2k/day before and about 5.5k/day after, so the whole CPI drop comes from more installs, not lower spend.\n- **CTR:** 1.6% before, 8.0% after.\n- **Click→install CVR:** 34% before, 15.7% after.\n- **D1 retention:** 34.3% before, 14.6% after.\n- **Revenue D7 per install:** $0.23 before, $0.11 after.\n- **Control:** the sister campaign `unity_playable_installs` is unchanged on CPI (about $1.16) and CTR (1.6%) [SQL]. Its D1 dipped slightly to 31.5% from 34.0%, which I didn't investigate.\n\n**What the team found:**\n- Daniel first read the drop as new video placements working and proposed +50% budget [Slack #ua-team 2026-07-14]. Ingrid's analysis showed click spam or install fraud, so the budget was held flat [Slack #data-questions 2026-07-16].\n- Kwame saw a bump of very long click-to-install times from this campaign since Jul 9, which matches click flooding [Slack #data-questions 2026-07-16].\n- A Unity ticket was opened and a stricter Attributa rule was turned on. The rule only rejects new installs, and the warehouse still holds the raw attributed installs, so dashboards stay inflated [Slack #ua-team 2026-07-17].\n- Unity agreed to credit part of July as invalid traffic, but the pattern continued [Slack #ua-team 2026-08-25]. The campaign is to be paused from Sep 1 and its budget moved to `unity_playable_installs` [Slack #ua-team 2026-08-25].\n- The Unity channel notes say the extra installs don't retain or pay, and tell people not to use the campaign's CPI or installs as a benchmark [Confluence: Channel Notes — Unity].\n\n**How to read it:**\n- The inflated installs are in `ua_spend` and `cohorts`, so CPI, installs and retention for this campaign are all distorted.\n- D7 ROAS can look normal because the fake installs add no revenue and no spend [Slack #ua-team 2026-08-25]. D1 retention and payer conversion are the better checks.\n- The warehouse can't separate real from fake installs. Without that split I can't give a \"true\" CPI. The pre-July CPI of about $1.15 is the only clean reference.",
+    "sql": [
+      {
+        "query": "WITH s AS (SELECT CASE WHEN date<='2026-07-08' THEN '1_pre' WHEN date<='2026-07-13' THEN '2_ramp' ELSE '3_post' END p, campaign, SUM(spend) sp, SUM(installs) i, SUM(clicks) c, SUM(impressions) im, COUNT(DISTINCT date) d FROM ua_spend WHERE channel='Unity' GROUP BY ALL),\nr AS (SELECT CASE WHEN install_date<='2026-07-08' THEN '1_pre' WHEN install_date<='2026-07-13' THEN '2_ramp' ELSE '3_post' END p, campaign, SUM(d1_retained)*1.0/NULLIF(SUM(installs) FILTER (WHERE d1_retained IS NOT NULL),0) d1, SUM(installs) ci, SUM(revenue_d7)*1.0/NULLIF(SUM(installs) FILTER (WHERE revenue_d7 IS NOT NULL),0) rev7_per_install FROM cohorts WHERE channel='Unity' GROUP BY ALL)\nSELECT s.p, s.campaign, sp/d spend_day, i/d installs_day, sp*1.0/NULLIF(i,0) cpi, c*1.0/NULLIF(im,0) ctr, i*1.0/NULLIF(c,0) cvr, d1, rev7_per_install, i=ci recon FROM s JOIN r USING(p,campaign) ORDER BY 2,1",
+        "rows": 6,
+        "truncated": false,
+        "error": null
+      }
+    ],
+    "retrieved": [
+      "knowledge/confluence/channel-notes-unity.md",
+      "knowledge/slack/data-questions/2026-07-16_unity-video-retarget-analysis.json",
+      "knowledge/slack/ua-team/2026-08-25_unity-makegood-update.json",
+      "knowledge/slack/ua-team/2026-07-14_unity-video-retarget-cpi-drop.json",
+      "knowledge/slack/ua-team/2026-07-17_unity-fraud-ticket.json"
+    ],
+    "tool_calls": 4,
+    "cost_usd": 0.0248,
+    "seconds": 14.8,
+    "facts_ok": true,
+    "facts_hit": "3/3",
+    "must_not_hits": [],
+    "retrieval_hit": true,
+    "citation_present": true,
+    "citations_valid": true,
+    "invalid_citations": [],
+    "forbidden_doc_cited": null,
+    "judge": {
+      "verdict": "pass",
+      "reason": "The answer matches the reference: invalid traffic (click spam/install fraud) from about 2026-07-09, CTR 1.6% to 8%, CPI about $1.15 to $0.50, D1 retention 34% to 14.6%, flat spend, installs not to be trusted or used as a benchmark, and ROAS looking normal because fake installs add no revenue or spend, with no materially false claims."
+    },
+    "correct": true
+  },
+  {
+    "id": "q09",
+    "type": "both",
+    "topic": "google",
+    "question": "Why did Organic Android installs roughly double between 2026-08-06 and 2026-08-09?",
+    "answer": "**It wasn't new demand.** Google Android installs were being recorded as Organic from 2026-08-06 to 2026-08-09, and that is what inflated Organic Android. The post-mortem says the Android link to Google didn't pick up the rotated API credentials, and the MMP silently fell back to organic attribution [Confluence: Post-mortem: Google Android attribution outage (2026-08-06 → 2026-08-09)].\n\n**Data check** (Android installs, 2026-08-03 → 2026-08-12) [SQL]:\n- Organic Android was about 4.0–4.2k per day on 08-03 to 08-05. It rose to 8,170 / 8,444 / 9,272 / 9,302 on 08-06 to 08-09, then fell back to 4,109 on 08-10.\n- Google Android installs fell from about 4.3–4.9k per day to 244–298 per day over the same four days, then recovered to 4,490 on 08-10.\n- Google Android clicks stayed normal, at about 20.6–23.1k per day during the outage. Delivery didn't change, so the loss was in measurement.\n- Total Android installs (all channels) stayed roughly flat, at about 26–30k per day. That is consistent with installs moving between channels rather than new demand.\n\n**Context from the knowledge base:**\n- Kwame Asante spotted the \"mirror image\" on 08-07, with Google down by about the same amount that Organic was up. The team had no store featuring on the calendar [Slack #data-questions 2026-08-07].\n- The re-linked integration went live late on 08-09. The affected window was 08-06 to 08-09 [Slack #ua-team 2026-08-10].\n- The post-mortem and Slack both quote about 17k misattributed installs. I didn't compute that figure from the database.\n- The MMP (Attributa) can't restate the data, so Organic Android for those four days stays inflated in our tables [Slack #ua-team 2026-08-10].\n- Google Android CPI and D7 ROAS for those dates are also wrong. The team agreed to exclude Google Android for 08-06 to 08-09 from CPI and ROAS trend reads [Slack #marketing-leads 2026-08-14].",
+    "sql": [
+      {
+        "query": "SELECT date, SUM(installs) FILTER (WHERE channel='Organic') org, SUM(installs) FILTER (WHERE channel='Google') ggl, SUM(clicks) FILTER (WHERE channel='Google') ggl_clicks, SUM(installs) tot FROM ua_spend WHERE platform='Android' AND date BETWEEN '2026-08-03' AND '2026-08-12' GROUP BY date ORDER BY date",
+        "rows": 10,
+        "truncated": false,
+        "error": null
+      }
+    ],
+    "retrieved": [
+      "knowledge/slack/data-questions/2026-08-07_organic-android-spike.json",
+      "knowledge/slack/ua-team/2026-08-10_google-android-recovered.json",
+      "knowledge/confluence/postmortem-2026-08-google-android-attribution.md",
+      "knowledge/slack/marketing-leads/2026-08-14_postmortem-review.json"
+    ],
+    "tool_calls": 3,
+    "cost_usd": 0.0157,
+    "seconds": 9.8,
+    "facts_ok": true,
+    "facts_hit": "3/3",
+    "must_not_hits": [],
+    "retrieval_hit": true,
+    "citation_present": true,
+    "citations_valid": true,
+    "invalid_citations": [],
+    "forbidden_doc_cited": null,
+    "judge": {
+      "verdict": "pass",
+      "reason": "The answer matches the reference: Google Android installs were misattributed to Organic during the Attributa outage, total Android installs stayed flat, the data can't be restated, and the numbers are consistent with the reference's figures."
+    },
+    "correct": true
+  },
+  {
+    "id": "q10",
+    "type": "both",
+    "topic": "deprecated",
+    "question": "Using the D7 ROAS definition from our wiki, what was paid D7 ROAS for install cohorts from 2026-08-17 to 2026-08-23?",
+    "answer": "**Paid D7 ROAS for the 2026-08-17 → 2026-08-23 install cohorts is 20.3%.** This covers only the D7-mature installs from 2026-08-17 to 2026-08-22. The 2026-08-23 cohort has no D7 revenue yet, so I can't report a D7 ROAS for it.\n\n- **Definition used:** the wiki's current definition is ROAS = cumulative D7 revenue ÷ spend of those same cohorts. Immature cohorts are dropped from both numerator and denominator [Confluence: Metric Definitions (v3)]. This matches CLAUDE.md, so there is no conflict.\n- **Result:** $67,423.12 of D7 revenue ÷ $332,508.74 of spend = 0.2028. This is paid only (Organic excluded), for installs 2026-08-17 → 2026-08-22 [SQL].\n- **Maturity:** D7 data is available only for installs up to 2026-08-22 as of 2026-08-29 [Confluence: Metric Definitions (v3)].\n- **Checks:** the join covered 840 paid cohort rows across 2026-08-17 → 2026-08-23. Installs in `ua_spend` matched `cohorts` on all 840 rows, so there was no creative fan-out [SQL].\n- **Legacy definition:** it divides D7 revenue by all spend, including the immature 2026-08-23 cohort. That gives 17.1% for this window [SQL]. It understates ROAS, and the deprecated page is not used [Slack #data-questions 2026-06-08].",
+    "sql": [
+      {
+        "query": "WITH spend AS (SELECT date AS install_date, channel, campaign, country, platform, SUM(spend) AS spend, SUM(installs) AS inst FROM ua_spend WHERE channel<>'Organic' GROUP BY ALL),\nc AS (SELECT c.*, s.spend, s.inst FROM cohorts c JOIN spend s USING (install_date, channel, campaign, country, platform) WHERE c.channel<>'Organic' AND c.install_date BETWEEN '2026-08-17' AND '2026-08-23')\nSELECT COUNT(*) n, SUM(CASE WHEN inst=installs THEN 1 ELSE 0 END) inst_match,\nMIN(install_date) FILTER (WHERE revenue_d7 IS NOT NULL) mn, MAX(install_date) FILTER (WHERE revenue_d7 IS NOT NULL) mx,\nSUM(revenue_d7) rev, SUM(spend) FILTER (WHERE revenue_d7 IS NOT NULL) sp,\nSUM(revenue_d7)*1.0/NULLIF(SUM(spend) FILTER (WHERE revenue_d7 IS NOT NULL),0) roas_d7,\nSUM(revenue_d7)*1.0/NULLIF(SUM(spend),0) naive_all_spend\nFROM c",
+        "rows": 1,
+        "truncated": false,
+        "error": null
+      }
+    ],
+    "retrieved": [
+      "knowledge/confluence/weekly-ua-report-template-old.md",
+      "knowledge/slack/data-questions/2026-06-08_how-to-compute-d7-roas.json",
+      "knowledge/slack/ua-team/2026-06-16_applovin-roas-d7-target.json",
+      "knowledge/confluence/metric-definitions.md"
+    ],
+    "tool_calls": 3,
+    "cost_usd": 0.0171,
+    "seconds": 9.9,
+    "facts_ok": true,
+    "facts_hit": "2/2",
+    "must_not_hits": [],
+    "retrieval_hit": true,
+    "citation_present": true,
+    "citations_valid": true,
+    "invalid_citations": [],
+    "forbidden_doc_cited": false,
+    "judge": {
+      "verdict": "pass",
+      "reason": "The answer reports 20.3% using the v3 definition with only D7-mature cohorts (08-17 to 08-22), matching the reference, and mentions the deprecated 17.1% figure only to say it is not used."
+    },
+    "correct": true
+  },
+  {
+    "id": "q11",
+    "type": "refuse",
+    "topic": "google",
+    "question": "What was the D30 ROAS for Google Android install cohorts from 2026-08-06 to 2026-08-09?",
+    "answer": "The D30 ROAS for these cohorts can't be calculated yet, because none of them have reached day 30.\n\n- The cohorts are Google, Android, installed 2026-08-06 → 2026-08-09. That is 48 cohort rows and 1,118 installs. All 48 rows have NULL `revenue_d30`, so there is no day-30 revenue to divide by spend [SQL].\n- As of 2026-08-29, D30 data only exists for install dates up to 2026-07-30. The 08-06 cohort reaches day 30 on 2026-09-05, and the 08-09 cohort on 2026-09-08. Both are after the data ends [SQL, get_metric_definitions].\n- Treating the missing revenue as 0 would give a false ROAS of 0, so I'm not reporting one. Estimating it would also be a guess.\n- **Available instead:** D7 revenue exists for these cohorts and totals $242.07 [SQL]. I haven't paired it with spend here, so I haven't given a D7 ROAS. I can run that, or a D30 ROAS for Google Android cohorts installed on or before 2026-07-30, if you'd like.",
+    "sql": [
+      {
+        "query": "SELECT COUNT(*) rows_, SUM(installs) installs, COUNT(revenue_d30) d30_nonnull, SUM(revenue_d7) rev_d7 FROM cohorts WHERE channel='Google' AND platform='Android' AND install_date BETWEEN '2026-08-06' AND '2026-08-09'",
+        "rows": 1,
+        "truncated": false,
+        "error": null
+      }
+    ],
+    "retrieved": [],
+    "tool_calls": 2,
+    "cost_usd": 0.0098,
+    "seconds": 7.6,
+    "facts_ok": true,
+    "facts_hit": "1/1",
+    "must_not_hits": [],
+    "retrieval_hit": null,
+    "citation_present": null,
+    "citations_valid": null,
+    "invalid_citations": [],
+    "forbidden_doc_cited": null,
+    "judge": {
+      "verdict": "pass",
+      "reason": "The answer declines to give a D30 ROAS and explains that these cohorts are not D30-mature as of 2026-08-29 (data only exists through 2026-07-30 installs, revenue_d30 is NULL), matching the reference, and it contains no materially false claims."
+    },
+    "correct": true
+  }
+]
