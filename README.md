@@ -172,6 +172,8 @@ Names only. Set them in your shell or the environment's secret settings, never i
 
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): layers, metric rules, end-to-end flows, design
   decisions, eval results and limitations.
+- [docs/HOW_ASK_WORKS.md](docs/HOW_ASK_WORKS.md): conceptual walk-through of a `/ask` question,
+  from Slack to a cited answer (chunking, embeddings, Chroma, hybrid search, SQL, guardrails).
 - [`agent/README.md`](agent/README.md), [`looker/README.md`](looker/README.md),
   [`knowledge/README.md`](knowledge/README.md), [`sql/weekly_ua/README.md`](sql/weekly_ua/README.md):
   component details.

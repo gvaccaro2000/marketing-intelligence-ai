@@ -183,7 +183,9 @@ sequenceDiagram
 ```
 
 At most 8 tool calls per question. On a failure or timeout the bot posts a short apology
-naming only the error type.
+naming only the error type. For a step-by-step conceptual explanation (what is precomputed,
+what happens live, how embeddings and hybrid search work), see
+[HOW_ASK_WORKS.md](HOW_ASK_WORKS.md).
 
 ## Design decisions
 
